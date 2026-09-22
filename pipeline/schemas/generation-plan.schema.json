@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tiktok-shop-video-ai.local/schemas/generation-plan.schema.json",
   "title": "Generation Plan",
-  "description": "Plano de geração Higgsfield produzido pelo higgsfield-production-agent ANTES de qualquer chamada paga. Só se torna executável quando status=approved e approval está preenchido. Implementa REQUIRE_GENERATION_APPROVAL (ver POLICIES.md).",
+  "description": "Plano de geração paga produzido pelo creatify-production-agent a partir de creative-plan.json, ANTES de qualquer chamada paga. Só se torna executável quando status=approved e approval está preenchido. Implementa REQUIRE_GENERATION_APPROVAL (ver POLICIES.md). Provider-agnostic por design (Fase 17): o campo 'provider' identifica o motor, mas a forma do plano não assume nenhum provider específico — detalhes técnicos do Creatify (endpoint, payload, job id) ficam em creatify-job.schema.json, não aqui.",
   "type": "object",
-  "required": ["schema_version", "project_id", "created_at", "status", "assets_to_generate", "estimated_total_credits"],
+  "required": ["schema_version", "project_id", "created_at", "status", "provider", "assets_to_generate", "estimated_total_credits"],
   "properties": {
     "schema_version": { "type": "string", "const": "1.0.0" },
     "project_id": { "type": "string" },
@@ -13,22 +13,33 @@
       "type": "string",
       "enum": ["awaiting_approval", "approved", "rejected"]
     },
+    "provider": {
+      "type": "string",
+      "description": "Motor de geração usado neste plano. Hoje sempre 'creatify' na prática, mas o schema não o fixa como const para permitir um provider futuro sem quebrar o contrato."
+    },
     "assets_to_generate": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["asset_id", "shot_id", "model", "prompt", "estimated_credits"],
+        "required": ["asset_id", "shot_id", "generation_input", "estimated_credits"],
         "properties": {
           "asset_id": { "type": "string" },
           "shot_id": { "type": "string" },
-          "model": { "type": "string" },
-          "prompt": { "type": "string" },
+          "generation_input": {
+            "type": "object",
+            "description": "O que será enviado ao provider, em termos neutros — não assume 'prompt de imagem' como único formato de entrada (um link_to_video usa uma URL de produto, um avatar usa um script de fala).",
+            "properties": {
+              "source_type": { "type": "string", "enum": ["product_url", "script_text", "reference_asset", "brief_text"] },
+              "source_value": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          },
           "estimated_credits": { "type": "number", "minimum": 0 },
           "max_attempts": {
             "type": "integer",
             "const": 1,
-            "description": "MAX_GENERATION_ATTEMPTS — fixo em 1 por rodada de aprovação (POLICIES.md)."
+            "description": "MAX_GENERATION_ATTEMPTS — fixo em 1 por rodada de aprovação (POLICIES.md). Regra de projeto, não específica de nenhum provider."
           },
           "max_retries_on_technical_failure": {
             "type": "integer",
@@ -39,9 +50,13 @@
       }
     },
     "estimated_total_credits": { "type": "number", "minimum": 0 },
+    "credits_estimate_basis": {
+      "type": "string",
+      "description": "Como a estimativa foi calculada (ex.: modelo/plano Creatify e taxa de créditos usada). Nunca assumir '1 vídeo = X créditos' fixo sem citar a fonte da tarifa."
+    },
     "approval": {
       "type": ["object", "null"],
-      "description": "Nulo até que um humano aprove explicitamente. asset-generation-subagent recusa execução se este campo estiver nulo.",
+      "description": "Nulo até que um humano aprove explicitamente. creatify-generation-subagent recusa execução se este campo estiver nulo.",
       "properties": {
         "approved_by": { "type": "string" },
         "approved_at": { "type": "string", "format": "date-time" }

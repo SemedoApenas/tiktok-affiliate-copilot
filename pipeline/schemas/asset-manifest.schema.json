@@ -2,14 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tiktok-shop-video-ai.local/schemas/asset-manifest.schema.json",
   "title": "Asset Manifest",
-  "description": "Saída final do higgsfield-production-agent: resultado real da geração (já ocorrida e aprovada) + validação técnica de cada asset.",
+  "description": "Saída final do creatify-production-agent: resultado real da geração (já ocorrida e aprovada) + validação técnica de cada asset. Provider-agnostic — é o único artefato que o restante da pipeline (Remotion, QA) precisa ler; detalhes técnicos específicos do Creatify (job id bruto, payload, status cru da API) ficam em creatify-job.schema.json, referenciado aqui apenas por id.",
   "type": "object",
-  "required": ["schema_version", "project_id", "created_at", "status", "assets", "total_credits_spent"],
+  "required": ["schema_version", "project_id", "created_at", "status", "provider", "assets", "total_credits_spent"],
   "properties": {
     "schema_version": { "type": "string", "const": "1.0.0" },
     "project_id": { "type": "string" },
     "created_at": { "type": "string", "format": "date-time" },
     "status": { "type": "string", "enum": ["complete", "partial_error", "error"] },
+    "provider": {
+      "type": "string",
+      "description": "Motor de geração usado para produzir estes assets (ex.: 'creatify')."
+    },
     "assets": {
       "type": "array",
       "items": {
@@ -18,6 +22,10 @@
         "properties": {
           "asset_id": { "type": "string" },
           "shot_id": { "type": "string" },
+          "creatify_job_ref": {
+            "type": ["string", "null"],
+            "description": "Referência ao registro correspondente em creatify-job.schema.json (ex.: caminho do arquivo ou provider_job_id), para auditoria técnica sem duplicar campos aqui."
+          },
           "generation_status": { "type": "string", "enum": ["success", "failed"] },
           "generation_attempts": { "type": "integer", "minimum": 1, "maximum": 3 },
           "credits_spent": { "type": "number", "minimum": 0 },

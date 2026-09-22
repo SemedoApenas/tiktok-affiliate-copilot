@@ -2,13 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tiktok-shop-video-ai.local/schemas/video-manifest.schema.json",
   "title": "Video Manifest",
-  "description": "Saída do remotion-production-agent: metadados do vídeo composto/renderizado.",
+  "description": "Saída do remotion-production-agent quando o Remotion é usado como camada de pós-produção (Fase 17: Remotion passou a ser opcional — ver CREATIFY-ARCHITECTURE.md secao 8). Se o Creatify já entregar o vídeo final pronto (sem composição/overlay adicional necessário), este artefato pode não existir para aquele run; nesse caso o qa-agent lê o asset final diretamente de asset-manifest.json. Este schema descreve apenas o caminho 'com Remotion'.",
   "type": "object",
   "required": ["schema_version", "project_id", "created_at", "status", "output"],
   "properties": {
     "schema_version": { "type": "string", "const": "1.0.0" },
     "project_id": { "type": "string" },
     "created_at": { "type": "string", "format": "date-time" },
+    "source_assets_provider": {
+      "type": "string",
+      "description": "Provider que gerou os assets de entrada usados nesta composição (ex.: 'creatify')."
+    },
     "status": { "type": "string", "enum": ["composing", "rendered", "error"] },
     "render_authorized_by_orchestrator": {
       "type": "boolean",

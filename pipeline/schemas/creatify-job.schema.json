@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/creatify-job.schema.json",
+  "title": "Creatify Job",
+  "description": "Registro técnico de UMA chamada real à API do Creatify, produzido exclusivamente pelo creatify-generation-subagent. Este schema é DELIBERADAMENTE específico do provider Creatify (nomes de endpoint, padrão create->poll, créditos) — é a única camada da pipeline que conhece detalhes do Creatify. O restante da pipeline consome apenas asset-manifest.schema.json (provider-agnostic). Ver pipeline/orchestration/CREATIFY-ARCHITECTURE.md para o que está CONFIRMADO PELA DOCUMENTAÇÃO vs. NÃO CONFIRMADO.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "provider", "endpoint_family", "internal_status", "provider_status"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "provider": { "type": "string", "const": "creatify" },
+    "integration_mode": {
+      "type": "string",
+      "enum": ["api", "mcp_unofficial"],
+      "description": "'api' = chamada direta à API REST oficial (api.creatify.ai, autenticada com X-API-ID/X-API-KEY). 'mcp_unofficial' = uso do servidor MCP de terceiros (github.com/TSavo/creatify-mcp, NÃO afiliado à Creatify) dentro de uma sessão Claude assistida por humano. Ver CREATIFY-ARCHITECTURE.md secao 5."
+    },
+    "endpoint_family": {
+      "type": "string",
+      "enum": ["link_to_video", "avatar_lipsync", "ai_shorts", "ai_editing", "text_to_speech", "other"],
+      "description": "Categoria de endpoint Creatify usada. Apenas 'link_to_video' tem método+path confirmados nesta fase (POST /api/link_to_videos/, GET /api/link_to_videos/{id}/) — as demais existem na documentação mas não foram verificadas endpoint a endpoint; ver CREATIFY-ARCHITECTURE.md."
+    },
+    "provider_job_id": {
+      "type": ["string", "null"],
+      "description": "ID retornado pela Creatify na criação do job. Nulo até a submissão ser aceita."
+    },
+    "provider_status": {
+      "type": "string",
+      "enum": ["not_submitted", "pending", "in_queue", "running", "done", "failed"],
+      "description": "Vocabulário de status bruto da Creatify, confirmado pela documentação para link_to_video. Mantido separado do internal_status para não acoplar o resto da pipeline a mudanças na API do provider."
+    },
+    "internal_status": {
+      "type": "string",
+      "enum": ["planned", "approved", "submitted", "processing", "completed", "failed", "cancelled", "validated"],
+      "description": "Modelo de estado interno, independente do provider (ver POLICIES.md / CREATIFY-ARCHITECTURE.md secao 12 do prompt original). Todo agente da pipeline fora do creatify-generation-subagent deve ler apenas este campo, nunca provider_status."
+    },
+    "submitted_at": { "type": ["string", "null"], "format": "date-time" },
+    "completed_at": { "type": ["string", "null"], "format": "date-time" },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "max_attempts": {
+      "type": "integer",
+      "const": 1,
+      "description": "MAX_GENERATION_ATTEMPTS — 1 por asset por rodada de aprovação (POLICIES.md), mesma regra do antigo modelo Higgsfield."
+    },
+    "max_retries_on_technical_failure": {
+      "type": "integer",
+      "const": 2,
+      "description": "MAX_RETRIES — apenas falha técnica (timeout, erro 5xx, job travado), nunca insatisfação de qualidade."
+    },
+    "failure_reason": { "type": ["string", "null"] },
+    "webhook_used": { "type": "boolean", "default": false },
+    "estimated_credits": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Estimativa antes da chamada. O custo real em créditos varia por modelo Creatify (ex.: Standard ~5 créditos/30s, Aurora v1 ~1 crédito/s — confirmar o valor exato do modelo usado na documentação/API antes de estimar; nunca assumir '1 vídeo = X créditos' fixo)."
+    },
+    "actual_credits": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Custo real, apenas quando a API retornar essa informação. Se a API não expuser custo real por job, permanece null e isso deve ser declarado explicitamente (nunca inferido)."
+    },
+    "output_url": { "type": ["string", "null"], "format": "uri" },
+    "local_artifact_path": { "type": ["string", "null"] },
+    "model_or_mode": {
+      "type": ["string", "null"],
+      "description": "Nome do modelo/modo Creatify usado, quando aplicável (ex.: 'standard', 'aurora_v1', 'aurora_v1_fast', 'boreal') — apenas valores confirmados pela documentação consultada nesta sessão, nunca inventados."
+    },
+    "request_summary": {
+      "type": "object",
+      "description": "Resumo NÃO sensível do payload enviado (nunca inclui X-API-ID/X-API-KEY ou qualquer credencial).",
+      "properties": {
+        "source_link_or_brief": { "type": "string" },
+        "aspect_ratio": { "type": "string" },
+        "duration_seconds": { "type": "number" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

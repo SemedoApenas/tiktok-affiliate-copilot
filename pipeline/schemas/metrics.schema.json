@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/metrics.schema.json",
+  "title": "Metrics",
+  "description": "Métricas de performance coletadas para um vídeo já publicado, associadas a platform-post. Nenhum valor pode ser estimado/inventado quando ausente — usar null e registrar em 'unavailable_fields'. A coleta real depende de qual API de analytics de cada plataforma estiver disponível e autorizada; nenhuma integração de analytics foi implementada ou confirmada nesta fase (ver CREATIFY-ARCHITECTURE.md secao 11).",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "video_id", "platform", "collected_at", "status"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "video_id": { "type": "string", "description": "Referência ao asset_id/video de video-manifest.json ou asset-manifest.json." },
+    "post_id": { "type": ["string", "null"], "description": "Referência ao platform-post, quando existir." },
+    "platform": {
+      "type": "string",
+      "enum": ["tiktok", "tiktok_shop", "instagram_reels", "youtube_shorts", "meta", "other"]
+    },
+    "collected_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["complete", "partial", "unavailable"],
+      "description": "'unavailable' quando nenhuma métrica pôde ser coletada (ex.: sem API de analytics conectada)."
+    },
+    "values": {
+      "type": "object",
+      "description": "Cada campo é null quando não coletado — nunca omitir silenciosamente um campo relevante, listar em unavailable_fields.",
+      "properties": {
+        "views": { "type": ["integer", "null"], "minimum": 0 },
+        "watch_time_seconds": { "type": ["number", "null"], "minimum": 0 },
+        "completion_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "likes": { "type": ["integer", "null"], "minimum": 0 },
+        "comments": { "type": ["integer", "null"], "minimum": 0 },
+        "shares": { "type": ["integer", "null"], "minimum": 0 },
+        "saves": { "type": ["integer", "null"], "minimum": 0 },
+        "clicks": { "type": ["integer", "null"], "minimum": 0 },
+        "ctr": { "type": ["number", "null"], "minimum": 0 },
+        "conversions": { "type": ["integer", "null"], "minimum": 0 },
+        "revenue": { "type": ["number", "null"], "minimum": 0 },
+        "roas": { "type": ["number", "null"], "minimum": 0 },
+        "cpa": { "type": ["number", "null"], "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "unavailable_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Nomes dos campos de 'values' que não puderam ser coletados nesta rodada, e por quê (registrar motivo em notes)."
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/platform-account.schema.json",
+  "title": "Platform Account",
+  "description": "Representa uma conta/canal de distribuição em uma plataforma (TikTok, TikTok Shop, Instagram Reels, YouTube Shorts, Meta, etc.), independente de como o conteúdo chega até ela. Este schema NÃO implica que a publicação automática está disponível — ele só descreve a conta; a capacidade real de publicar deve ser confirmada por plataforma antes de qualquer automação (ver publishing-metadata.schema.json e CREATIFY-ARCHITECTURE.md secao 10/17). Nenhum agente lê ou grava credenciais aqui — apenas identificadores não-sensíveis.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "platform", "account_label", "publish_capability"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "platform": {
+      "type": "string",
+      "enum": ["tiktok", "tiktok_shop", "instagram_reels", "youtube_shorts", "meta", "other"]
+    },
+    "account_label": {
+      "type": "string",
+      "description": "Rótulo não-sensível para identificar a conta (ex.: 'loja principal'), nunca um token ou identificador de credencial."
+    },
+    "publish_capability": {
+      "type": "string",
+      "enum": ["not_confirmed", "draft_only", "publish_supported", "management_only"],
+      "description": "O que foi de fato confirmado pela documentação oficial da plataforma/Creatify para esta conta — nunca 'publish_supported' por suposição. 'not_confirmed' é o valor padrão seguro até haver verificação documentada."
+    },
+    "capability_source": {
+      "type": ["string", "null"],
+      "description": "URL ou referência da documentação que sustenta o valor de publish_capability."
+    },
+    "connected_via": {
+      "type": "string",
+      "enum": ["not_connected", "creatify_media_buyer", "native_platform_api", "manual_upload"],
+      "default": "not_connected"
+    }
+  },
+  "additionalProperties": false
+}

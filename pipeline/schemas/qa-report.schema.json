@@ -66,8 +66,8 @@
     },
     "responsible_agent_for_fix": {
       "type": ["string", "null"],
-      "enum": ["remotion-production-agent", null],
-      "description": "Preenchido quando status=rejected, indicando quem deve corrigir. Fase 16: valor 'higgsfield-production-agent' removido (agente descontinuado); o agente de geração de assets responsável por essa correção será reintroduzido quando o motor substituto (Creatify) for integrado (DEFERRED — Creatify migration phase)."
+      "enum": ["remotion-production-agent", "creatify-production-agent", null],
+      "description": "Preenchido quando status=rejected, indicando quem deve corrigir. Fase 17: 'creatify-production-agent' substitui o antigo 'higgsfield-production-agent' (removido na Fase 16) como responsável por problemas de asset gerado."
     }
   },
   "additionalProperties": false

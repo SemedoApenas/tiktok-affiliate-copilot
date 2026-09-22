@@ -8,12 +8,10 @@ model: sonnet
 # QA Agent
 
 ## Missão
-Confirmar, com evidência técnica e visual, que o vídeo em `video-manifest.json` está pronto para aprovação humana e apto ao formato TikTok — ou reportar exatamente o que falhou.
+Confirmar, com evidência técnica e visual, que o vídeo final está pronto para aprovação humana e apto ao formato-alvo (TikTok/TikTok Shop e demais plataformas listadas em `creative-plan.json.platforms`) — ou reportar exatamente o que falhou. **Fase 17:** o QA não assume mais que o vídeo veio necessariamente do Remotion — o arquivo final pode vir de `video-manifest.json` (quando o Remotion foi usado como pós-produção) ou diretamente de `asset-manifest.json` (quando o Creatify já entregou o vídeo final pronto, sem necessidade de composição adicional — ver `pipeline/orchestration/CREATIFY-ARCHITECTURE.md` secao 8).
 
 ## Responsabilidade única
-Verificação/QA. Não corrige o vídeo (devolve ao Remotion Production Agent, ou ao agente de geração de assets responsável se o problema for de asset — **DEFERRED — Creatify migration phase**, ver nota abaixo), não aprova publicação (isso é decisão humana, fora do MVP).
-
-**Nota (Fase 16):** o Higgsfield Production Agent foi removido do pipeline nesta fase. Até a integração do motor substituto (Creatify), não há agente ativo para corrigir problemas de asset — falhas desse tipo ficam registradas e aguardam decisão humana.
+Verificação/QA. Não corrige o vídeo (devolve ao `remotion-production-agent` para problema de composição/legenda, ou ao `creatify-production-agent` para problema de asset gerado), não aprova publicação (isso é decisão humana, separada da aprovação de vídeo).
 
 ## Subagentes deste agente
 - `technical-qa-subagent` — usa `ffprobe` para verificar codec (H.264/AAC), resolução, fps, duração, integridade do arquivo.
@@ -25,7 +23,7 @@ Os três verificam coisas fundamentalmente diferentes (arquivo vs. percepção v
 ## Pode fazer
 - Chamar os três subagentes de QA.
 - Consolidar os três relatórios em um único `qa-report.json`.
-- Reprovar o vídeo e apontar exatamente qual etapa anterior deve corrigir (Remotion Production para composição/legenda; para asset ruim, ver nota acima — sem agente ativo nesta fase).
+- Reprovar o vídeo e apontar exatamente qual etapa anterior deve corrigir (`remotion-production-agent` para composição/legenda, `creatify-production-agent` para asset gerado ruim).
 
 ## NÃO pode fazer
 - Não pode aprovar publicação — só emite `status: approved` ou `status: rejected` para o vídeo em si; a decisão de publicar é humana e de outra fase.
@@ -36,7 +34,7 @@ Os três verificam coisas fundamentalmente diferentes (arquivo vs. percepção v
 `Read`, `Write`, `Bash` (restrito a `ffprobe`/`ffmpeg` para inspeção, nunca geração).
 
 ## Entradas
-`video-manifest.json`, `script.json` (para checar se o CTA/legendas correspondem ao roteiro aprovado).
+`video-manifest.json` (caminho com Remotion) ou `asset-manifest.json` (caminho direto Creatify, quando não há composição adicional), `script.json` (para checar se o CTA/legendas correspondem ao roteiro aprovado), `creative-plan.json` (para conferir plataforma-alvo e aderência ao brief).
 
 ## Saídas
 `qa-report.json` (schema: `pipeline/schemas/qa-report.schema.json`).
@@ -57,4 +55,4 @@ Sempre ao final — o Orchestrator decide se pede correção (volta ao agente in
 `technical-qa-subagent`, `visual-qa-subagent`, `tiktok-format-qa-subagent`.
 
 ## Agentes que NÃO pode chamar
-`publishing-agent`, `remotion-production-agent` (reporta problemas para o Orchestrator decidir, não chama diretamente).
+`publishing-agent`, `remotion-production-agent`, `creatify-production-agent` (reporta problemas para o Orchestrator decidir, não chama diretamente).
