@@ -50,8 +50,10 @@ Nenhum agente deve afirmar no roteiro algo que não esteja sustentado por `produ
 
 ## 9. Onde ocorre o primeiro gate humano
 
-Depois de `creative-plan.json` estar completo e `generation-plan.json` ser produzido pelo `higgsfield-production-agent`, com `status: awaiting_approval` e `approval: null`. Este é o único gate obrigatório antes de qualquer geração paga — ver `pipeline/policies/POLICIES.md` §1 (`REQUIRE_GENERATION_APPROVAL`).
+**Nota (Fase 16 — DEFERRED — Creatify migration phase):** o `higgsfield-production-agent` citado abaixo foi removido nesta fase junto com o desacoplamento do Higgsfield. Não há hoje nenhum agente ativo de geração paga; a descrição a seguir permanece como referência do contrato esperado (gate de aprovação antes de qualquer geração) até a integração do motor substituto (Creatify).
+
+Depois de `creative-plan.json` estar completo e `generation-plan.json` ser produzido pelo agente de produção do motor de geração, com `status: awaiting_approval` e `approval: null`. Este é o único gate obrigatório antes de qualquer geração paga — ver `pipeline/policies/POLICIES.md` §1 (`REQUIRE_GENERATION_APPROVAL`).
 
 ## 10. Nenhuma geração paga ocorre automaticamente
 
-Mesmo com `product.json` real e todo o restante do pipeline completo, nenhuma chamada à Higgsfield ocorre sem uma aprovação humana explícita preenchendo `generation-plan.json.approval.approved_by` e `approval.approved_at`. Essa decisão nunca é tomada por um agente.
+Mesmo com `product.json` real e todo o restante do pipeline completo, nenhuma chamada a um motor de geração paga deve ocorrer sem uma aprovação humana explícita preenchendo `generation-plan.json.approval.approved_by` e `approval.approved_at`. Essa decisão nunca é tomada por um agente. (Fase 16: sem motor de geração ativo — ver nota na seção 9.)

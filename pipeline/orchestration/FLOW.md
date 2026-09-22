@@ -11,10 +11,12 @@ SCRIPT          → script-agent              → script.json
   ↓
 CREATIVE        → creative-agent            → creative-plan.json
   ↓
-HIGGSFIELD      → higgsfield-production-agent
-                    1. → generation-plan.json      (sem custo, sem gerar nada)
-                    2. ⏸ PAUSA — aguarda aprovação humana explícita
-                    3. → asset-manifest.json        (só depois de aprovado)
+GERAÇÃO DE ASSETS → DEFERRED — Creatify migration phase
+                    (Fase 16: higgsfield-production-agent removido; motor
+                    substituto ainda não integrado. Quando reintroduzida,
+                    esta etapa mantém o mesmo contrato: plano de geração →
+                    ⏸ PAUSA — aprovação humana explícita → asset-manifest.json,
+                    só depois de aprovado.)
   ↓
 REMOTION        → remotion-production-agent → video-manifest.json
   ↓
@@ -33,11 +35,11 @@ PUBLISHING      → publishing-agent — **DESATIVADO NO MVP, este passo não ex
 4. **Bloquear avanço** se o contrato for inválido — devolve ao agente de origem, não tenta corrigir o JSON por conta própria.
 5. **Retry controlado:** no máximo o limite definido por agente (2 ciclos internos de escrita/QA no Script Agent e no Creative Agent; `MAX_RETRIES=2` para falha técnica de geração no Higgsfield Production Agent — ver `pipeline/policies/POLICIES.md`). Esgotado o limite, para e reporta ao humano.
 6. **Registrar erros e decisões** em `pipeline/runs/<run_id>/log.json`, como entradas conformes a `pipeline/schemas/log-entry.schema.json` — uma entrada por evento relevante (chamada de agente, retorno, validação de contrato, retry, consulta de skill, gate de aprovação), não apenas por erro.
-7. **Nunca executar operação cara sem autorização:** a única pausa obrigatória de aprovação humana no MVP é entre `generation-plan.json` e a geração real na Higgsfield. A segunda pausa (HUMAN APPROVAL, após QA) decide se o vídeo está bom — **não** decide publicação, porque o Publishing Agent está desativado; nesta fase o pipeline termina aí.
+7. **Nunca executar operação cara sem autorização:** a pausa obrigatória de aprovação humana antes de qualquer geração paga é um requisito estrutural, independente do motor (Higgsfield removido na Fase 16; motor substituto DEFERRED — Creatify migration phase). A segunda pausa (HUMAN APPROVAL, após QA) decide se o vídeo está bom — **não** decide publicação, porque o Publishing Agent está desativado; nesta fase o pipeline termina aí.
 
 ## Pontos de pausa obrigatória (não automatizáveis)
 
-- **Antes da geração Higgsfield:** `generation-plan.json` → humano aprova ou rejeita explicitamente. Sem essa aprovação, o Orchestrator nunca chama `asset-generation-subagent`.
+- **Antes de qualquer geração paga:** `generation-plan.json` → humano aprova ou rejeita explicitamente. Esta etapa está DEFERRED — Creatify migration phase (sem agente de geração ativo nesta fase); quando reintroduzida, mantém a mesma regra de aprovação.
 - **Antes de qualquer render pesado do Remotion:** o Orchestrator confirma que não há outro processo pesado em andamento e que a RAM livre é suficiente (ver `pipeline/policies/POLICIES.md`, seção 2).
 - **Após o QA:** `qa-report.json` vai para aprovação humana. Aprovação de vídeo ≠ aprovação de publicação — são decisões diferentes, e a de publicação nem está disponível no MVP.
 

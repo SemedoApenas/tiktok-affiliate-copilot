@@ -2,9 +2,13 @@
 
 Este documento é a fonte única das políticas de custo, hardware e segurança que todo agente/subagente deve respeitar. Nenhum agente deve reimplementar estes números com valores diferentes — eles referenciam este arquivo.
 
-## 1. Controle de custo (Higgsfield)
+## 1. Controle de custo (geração paga) — DEFERRED — Creatify migration phase
 
-A Higgsfield cobra créditos por geração. O workspace atual (`Private`, plano free) tem **10 créditos** — extremamente limitado. Por isso:
+**Status (Fase 16):** a Higgsfield foi desacoplada da arquitetura (agentes e skills removidos — ver relatório da Fase 16). Os números concretos abaixo (10 créditos, workspace `Private`) eram específicos da Higgsfield e não se aplicam a nenhum motor ativo hoje. O princípio geral — nenhuma geração paga sem aprovação humana explícita, tentativas limitadas — permanece válido e deve ser reimplementado com os números reais do motor substituto (Creatify) quando essa integração for feita. Nada nesta seção deve ser tratado como configuração ativa até lá.
+
+Texto original (histórico, para referência ao redesenhar):
+
+A Higgsfield cobrava créditos por geração. O workspace usado no dry-run (`Private`, plano free) tinha **10 créditos** — extremamente limitado. Por isso:
 
 | Parâmetro | Valor conceitual | Significado |
 |---|---|---|
@@ -23,26 +27,25 @@ Máquina: RAM ~7,7 GB, GPU RTX 2050 4 GB VRAM.
 
 - **Concorrência do Remotion:** sempre `--concurrency 1` (ou equivalente sequencial). Nunca renderizar duas composições/segmentos ao mesmo tempo.
 - **Chromium:** no máximo uma instância do Chromium do Remotion aberta por vez. Nunca abrir `remotion studio` e rodar um `remotion render` simultaneamente.
-- **Geração pesada fica na nuvem:** toda geração de imagem/vídeo/áudio é feita pela API da Higgsfield (nuvem), nunca localmente. A máquina local só compõe, valida e faz QA técnico leve (ffprobe).
+- **Geração pesada fica na nuvem:** toda geração de imagem/vídeo/áudio deve ser feita na nuvem, nunca localmente. A máquina local só compõe, valida e faz QA técnico leve (ffprobe). (Fase 16: motor de nuvem específico — Higgsfield — removido; regra geral mantida para o motor substituto, DEFERRED — Creatify migration phase.)
 - **Processos simultâneos:** nenhum agente deve iniciar um processo pesado (render, bundle, generate) enquanto outro processo pesado do mesmo tipo já estiver em execução. O Orchestrator é responsável por serializar essas chamadas entre agentes.
 - Antes de qualquer render, verificar RAM livre; se estiver criticamente baixa (ex.: <500 MB), o agente deve pausar e reportar em vez de insistir.
 
 ## 3. Segurança
 
-- Nenhum agente executa scripts baixados de rede sem revisão humana prévia (mesmo princípio já aplicado na instalação do CLI Higgsfield).
+- Nenhum agente executa scripts baixados de rede sem revisão humana prévia.
 - Nenhum download externo (binários, repositórios, pacotes) é iniciado por um agente por conta própria — apenas como parte de um passo já autorizado pelo usuário (ex.: instalação de skill oficial já aprovada). Nenhum agente baixa e executa conteúdo de origem não verificada.
 - Nenhum agente instala dependências novas sem autorização explícita do usuário.
-- Nenhuma chamada paga (Higgsfield) sem aprovação explícita (ver seção 1).
-- Nenhum agente deve imprimir, logar ou escrever em qualquer `.json` de projeto tokens, chaves de API, cookies ou credenciais. Credenciais vivem exclusivamente em `~/.config/higgsfield/credentials.json`, gerenciadas pelo próprio CLI — nenhum agente lê ou copia esse arquivo.
+- Nenhuma chamada de geração paga sem aprovação explícita (ver seção 1 — DEFERRED — Creatify migration phase, sem motor ativo nesta fase).
+- Nenhum agente deve imprimir, logar ou escrever em qualquer `.json` de projeto tokens, chaves de API, cookies ou credenciais.
 - Nenhuma publicação automática no TikTok durante o MVP — o Publishing Agent está desativado por definição (ver `publishing-agent.md`).
 - Nenhum comando destrutivo (deletar arquivos, sobrescrever configs) sem confirmação explícita do usuário.
-- **Proteção estrutural (não apenas instrução):** `.claude/settings.json` (escopo de projeto) define `permissions.ask` para `Bash(higgsfield *)`, `Bash(higgs *)` e `Bash(hf *)` — qualquer comando Bash que comece com esses binários exige confirmação humana explícita antes de executar, independente de qual agente tentou chamá-lo. Isso vale inclusive para comandos somente-leitura (`--version`, `account status`) — a fricção extra é intencional dado o número limitado de créditos. **Limitação conhecida:** este é o mecanismo mais forte que o Claude Code oferece hoje para isso (prefixo de comando, não um sandbox por ferramenta); não impede um agente com `Bash` de tentar digitar o comando — apenas garante que a execução para nesse ponto até um humano confirmar.
-- **Superfície de skills reduzida:** apenas 3 das 8 skills oficiais da Higgsfield (`higgsfield-generate`, `higgsfield-product-photoshoot`, `higgsfield-youtube-thumbnail`) estão instaladas dentro deste projeto (`tiktok-shop-video-ai/.claude/skills/`), conforme prioridade do MVP. As outras 5 (`brandkit`, `marketplace-cards`, `video-explainer`, `websites`, `soul-id`) permanecem apenas no diretório pai (`CODE/.claude/skills/`) e, por não estarem no diretório do projeto, **não são descobertas** por uma sessão do Claude Code iniciada aqui — confirmado empiricamente, não assumido.
+- **Histórico (Fase 16 — removido):** até a Fase 16, `.claude/settings.json` definia `permissions.ask` para `Bash(higgsfield *)`, `Bash(higgs *)` e `Bash(hf *)`, e uma superfície reduzida de 3 skills Higgsfield estava instalada no projeto. Ambos foram removidos junto com o desacoplamento do Higgsfield (agentes, skills e essa regra de permissão não têm mais função — não há mais nenhum comando `higgsfield`/`higgs`/`hf` que um agente deste projeto possa tentar executar). Quando o motor substituto (Creatify) for integrado, uma proteção estrutural equivalente (gate de confirmação humana em `settings.json` para os comandos daquele CLI) deve ser recriada — **DEFERRED — Creatify migration phase**.
 
 ## 4. QA
 
 - Todo QA (técnico, visual, formato TikTok) é somente-leitura: nenhum subagente de QA corrige, regenera ou re-renderiza — apenas mede e reporta.
-- Uma falha de QA nunca dispara automaticamente uma nova geração Higgsfield ou um novo render Remotion. O QA aponta qual agente anterior deve agir; a decisão de agir é do Orchestrator/humano.
+- Uma falha de QA nunca dispara automaticamente uma nova geração paga ou um novo render Remotion. O QA aponta qual agente anterior deve agir; a decisão de agir é do Orchestrator/humano.
 - QA nunca aprova publicação — aprova apenas o vídeo em si (ver `qa-report.schema.json`); a aprovação de publicação é um gate humano separado, hoje sem destino (Publishing desativado).
 
 ## 5. Referência cruzada

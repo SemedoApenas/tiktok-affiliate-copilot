@@ -23,7 +23,7 @@ Orquestração e controle de fluxo. Não pesquisa, não escreve roteiro, não ge
 - Pausar o fluxo e pedir decisão humana quando a política de aprovação (`REQUIRE_GENERATION_APPROVAL`) exigir.
 
 ## NÃO pode fazer
-- Nunca chamar o Higgsfield Production Agent (ou seu Asset Generation Subagent) sem que exista aprovação humana explícita registrada.
+- Nunca chamar um agente de produção/geração paga sem que exista aprovação humana explícita registrada. **Nota (Fase 16):** o Higgsfield Production Agent foi removido nesta fase (Higgsfield desacoplado da arquitetura); não há atualmente nenhum agente de geração paga ativo. A integração com o motor substituto (Creatify) é **DEFERRED — Creatify migration phase**.
 - Nunca chamar o Publishing Agent — ele está desativado no MVP; qualquer tentativa deve ser recusada e registrada como erro de configuração.
 - Nunca reescrever ou "corrigir" o conteúdo de um artefato de outro agente — se está inválido, devolve para o agente de origem.
 - Nunca renderizar, gerar ou publicar diretamente.
@@ -39,16 +39,16 @@ Orquestração e controle de fluxo. Não pesquisa, não escreve roteiro, não ge
 Um log de execução (`pipeline/runs/<run_id>/log.json`), como array de entradas conformes a `pipeline/schemas/log-entry.schema.json`. O Orchestrator registra uma entrada para cada evento relevante do pipeline — não apenas para as próprias validações de contrato — incluindo: agente e subagente envolvidos, timestamp, artefato de entrada/saída, status retornado, se houve retry (e por quê), quais skills foram consultadas (quando o agente reportar isso) e quando um gate de aprovação humana foi solicitado/atingido/liberado. Cada agente principal, ao devolver o controle ao Orchestrator, deve reportar essas informações (quais subagentes chamou, se houve retry e o motivo, quais skills consultou) para que o Orchestrator registre uma entrada completa — o Orchestrator não infere isso silenciosamente.
 
 ## Critérios de sucesso
-Todos os agentes da sequência do MVP (Research → Strategy → Script → Creative → Higgsfield Production → Remotion Production → QA) executados em ordem, cada contrato validado, chegando a um `qa-report.json` com `status: approved` ou `status: rejected` — ambos são sucessos de orquestração (o pipeline funcionou, mesmo que o vídeo não tenha passado).
+Todos os agentes ativos da sequência do MVP (Research → Strategy → Script → Creative → [motor de geração: DEFERRED — Creatify migration phase] → Remotion Production → QA) executados em ordem, cada contrato validado, chegando a um `qa-report.json` com `status: approved` ou `status: rejected` — ambos são sucessos de orquestração (o pipeline funcionou, mesmo que o vídeo não tenha passado).
 
 ## Critérios de erro
-Contrato inválido (schema não bate), agente retornou `status: error` além do limite de retries, ou uma etapa tentou pular a fila (ex.: Creative Agent tentando chamar Higgsfield Production diretamente). Nesses casos, o Orchestrator para o fluxo e reporta ao humano — nunca tenta contornar silenciosamente.
+Contrato inválido (schema não bate), agente retornou `status: error` além do limite de retries, ou uma etapa tentou pular a fila (ex.: um agente de fase anterior tentando chamar um agente de produção diretamente). Nesses casos, o Orchestrator para o fluxo e reporta ao humano — nunca tenta contornar silenciosamente.
 
 ## Quando devolve ao Orchestrator
 N/A — o Orchestrator é o topo da cadeia. Ele devolve ao humano quando: (a) o pipeline termina (aprovado ou rejeitado), (b) uma aprovação de geração paga é necessária, (c) um erro esgotou os retries permitidos.
 
 ## Agentes que pode chamar
-`research-agent`, `strategy-agent`, `script-agent`, `creative-agent`, `higgsfield-production-agent`, `remotion-production-agent`, `qa-agent`.
+`research-agent`, `strategy-agent`, `script-agent`, `creative-agent`, `remotion-production-agent`, `qa-agent`. (O agente de geração paga entre Creative e Remotion está **DEFERRED — Creatify migration phase**; não existe agente ativo nesse papel nesta fase.)
 
 ## Agentes que NÃO pode chamar
 `publishing-agent` (desativado no MVP — chamar é erro de configuração, não uma decisão de fluxo).

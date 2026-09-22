@@ -1,24 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "higgsfield-generate": {
-      "source": "higgsfield-ai/skills",
-      "sourceType": "github",
-      "skillPath": "higgsfield-generate/SKILL.md",
-      "computedHash": "270c7f8a6067835f9ca0745fa3ad575b067b23cf9a2b7b9c53dae99c00b4b8e7"
-    },
-    "higgsfield-product-photoshoot": {
-      "source": "higgsfield-ai/skills",
-      "sourceType": "github",
-      "skillPath": "higgsfield-product-photoshoot/SKILL.md",
-      "computedHash": "5dd5a272025e954acbb9beb477a6a1c9200ce4e8155ab8ba8cfe13f444d0da64"
-    },
-    "higgsfield-youtube-thumbnail": {
-      "source": "higgsfield-ai/skills",
-      "sourceType": "github",
-      "skillPath": "higgsfield-youtube-thumbnail/SKILL.md",
-      "computedHash": "f549199d92da66913a1f7987ba812a51b40515b001def50c22252531215d43a9"
-    },
     "remotion-best-practices": {
       "source": "remotion-dev/skills",
       "sourceType": "github",

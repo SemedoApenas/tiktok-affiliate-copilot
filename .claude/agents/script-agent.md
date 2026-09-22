@@ -53,4 +53,4 @@ Após roteiro aprovado internamente, ou após esgotar os 2 ciclos de retry sem a
 `script-writer-subagent`, `script-qa-subagent`.
 
 ## Agentes que NÃO pode chamar
-`creative-agent`, `higgsfield-production-agent`, `remotion-production-agent`, `qa-agent`, `publishing-agent`, ou qualquer outro agente principal.
+`creative-agent`, `remotion-production-agent`, `qa-agent`, `publishing-agent`, ou qualquer outro agente principal.

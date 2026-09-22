@@ -28,7 +28,7 @@ Composição/renderização. Não gera assets (vêm prontos do Higgsfield Produc
 - Nunca rodar mais de um processo Remotion pesado (`studio`, `render`, `bundle`) simultaneamente.
 - Nunca renderizar sem autorização explícita do Orchestrator para aquela etapa específica.
 - Nunca instalar dependências novas do Remotion/npm sem autorização.
-- Nunca chamar a Higgsfield (não tem motivo — os assets já vêm prontos).
+- Nunca chamar nenhum motor de geração (não tem motivo — os assets já vêm prontos).
 
 ## Ferramentas/skills permitidas
 `Read`, `Write`, `Bash` (restrito a comandos do Remotion CLI — nunca `higgsfield ...`), `Skill` (`remotion-create`, `remotion-markup`, `remotion-multimedia`, `remotion-captions`, `remotion-render`).
@@ -55,4 +55,4 @@ Após composição+render concluídos (sucesso ou erro), e antes de qualquer ren
 `composition-subagent`, `caption-subagent`.
 
 ## Agentes que NÃO pode chamar
-`higgsfield-production-agent`, `qa-agent`, `publishing-agent`, agentes de fases anteriores.
+`qa-agent`, `publishing-agent`, agentes de fases anteriores.
