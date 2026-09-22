@@ -58,10 +58,10 @@ RAM é o recurso mais restrito da máquina — todo agente de composição/rende
 .agents/skills/     cópia universal das mesmas skills (formato cross-agent do skills.sh)
 
 pipeline/
-  schemas/          15 JSON Schemas — contrato entre cada etapa (4 novos na Fase 17: creatify-job, platform-account, metrics, experiment)
+  schemas/          16 JSON Schemas — contrato entre cada etapa (4 novos na Fase 17: creatify-job, platform-account, metrics, experiment; 1 novo na Fase 18: tiktok-publication)
   policies/         POLICIES.md — fonte central de custo/hardware/segurança
-  orchestration/    FLOW.md (fluxo do Orchestrator), CREATIFY-ARCHITECTURE.md, CREATIFY-SETUP.md, REAL-PRODUCT-INPUT.md
-  runs/             pipeline/runs/dry-run-001/ — histórico do dry-run Higgsfield (Fase 14/15), preservado sem edição; nenhum outro run existe ainda
+  orchestration/    FLOW.md (fluxo do Orchestrator), CREATIFY-ARCHITECTURE.md, CREATIFY-SETUP.md, CREATIFY-INTEGRATION-VALIDATION.md, TIKTOK-ARCHITECTURE.md, TIKTOK-SETUP.md, REAL-PRODUCT-INPUT.md
+  runs/             dry-run-001/ — histórico do dry-run Higgsfield (Fase 14/15), preservado sem edição. dry-run-002/ — execução estrutural 100% SIMULADA da pipeline Creatify+TikTok completa (Fase 18), sem nenhuma chamada externa real. Nenhum run real ainda.
 
 src/                composição Remotion (placeholder do template, ainda não 9:16)
 public/             assets estáticos do Remotion
@@ -99,9 +99,10 @@ A arquitetura não é mais estruturalmente limitada a TikTok Shop: `creative-pla
 
 ## Estado do projeto
 
-- Publishing: **OFF** (`tools: none`) — nenhuma capacidade de publicação direta foi confirmada na documentação do Creatify.
-- Geração via Creatify: **implementada, não testada** — nenhuma chamada real foi feita.
-- Métricas/Performance loop: **NÃO IMPLEMENTADO** (sem integração de analytics de nenhuma plataforma).
-- Integração com TikTok API/TikTok Shop API: **OFF** (não existe, não foi desenhada).
+- Publishing: **OFF** (`tools: none`) — nenhuma capacidade de publicação direta foi confirmada na documentação do Creatify; publicação orgânica real dependeria de uma integração TikTok separada (Content Posting API), documentada mas não implementada (ver `TIKTOK-ARCHITECTURE.md`).
+- Geração via Creatify: **implementada, não testada** — nenhuma chamada real foi feita (`CREATIFY_API_ID`/`CREATIFY_API_KEY` ausentes neste ambiente).
+- Publicação TikTok: **contrato técnico documentado (Fase 18), não implementado, não testado** — nenhum app TikTok Developer existe, nenhum OAuth foi feito.
+- Métricas/Performance loop: **contrato técnico documentado (Fase 18), não implementado** — caminho mais provável é a TikTok API for Business (Organic API), não construído.
+- Integração com TikTok API/TikTok Shop API: **OFF** (nenhum app registrado, nenhuma credencial configurada).
 - Automação de publicação: **nenhuma**.
-- Pipeline real: **nunca executada** — nenhum `product.json` de produto real foi criado; nenhuma geração, render ou publicação ocorreu até agora. `pipeline/runs/dry-run-001/` é histórico do fluxo antigo (Higgsfield), preservado sem edição.
+- Pipeline real: **nunca executada** — nenhum `product.json` de produto real foi criado; nenhuma geração, render ou publicação ocorreu até agora. `pipeline/runs/dry-run-001/` é histórico do fluxo antigo (Higgsfield), preservado sem edição. `pipeline/runs/dry-run-002/` é uma simulação estrutural 100% local da Fase 18 (Creatify+TikTok), sem nenhuma chamada externa real.

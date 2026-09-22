@@ -15,13 +15,16 @@ Geração de variações e hipóteses de teste. Não escreve o roteiro final pal
 
 ## Pode fazer
 - Ler `experiment.json` anteriores (`status: analyzed`), `research.json`, `strategy.json` e vídeos/briefs anteriores do mesmo produto.
-- Propor um novo `experiment.json` com `status: planned`, contendo 2+ variantes claramente diferenciadas por uma única dimensão por vez quando possível (ex.: mesmo roteiro, hooks diferentes) para manter o teste interpretável.
+- Propor um novo `experiment.json` com `status: planned`, preenchendo obrigatoriamente `variable` (uma única dimensão de `pipeline/schemas/experiment.schema.json`: `hook`, `duration`, `cta`, `structure`, `pain_angle`, `demonstration`, `on_screen_text`, `pace`, `avatar`, `visual_style`, `other`) e `variable_reason` (por que essa dimensão, com base em quê — aprendizado anterior, lacuna de research, ou ausência de dado prévio).
+- Propor 2+ variantes que mudam **apenas** a dimensão declarada em `variable`, mantendo todo o resto igual — se duas ou mais dimensões mudarem ao mesmo tempo entre as variantes, o experimento não é interpretável e não deve ser proposto assim.
 - Encaminhar cada variante como um novo direcionamento para o `strategy-agent`/`script-agent`/`creative-agent` rodarem o pipeline normal (research → strategy → script → creative) para aquela variante específica.
 - Favorecer experimentação incremental sobre reescrita completa quando já houver aprendizado prévio.
 
 ## NÃO pode fazer
 - Não pode gerar vídeo nem chamar `creatify-production-agent` diretamente — só produz o brief/direcionamento; a produção segue o fluxo normal com os gates de aprovação de sempre.
 - Não pode declarar que uma variante vai performar melhor — só formula a hipótese a ser testada.
+- Não pode criar um ranking absoluto de criativos anteriores sem volume de dados suficiente (mesmo critério de `confidence` usado pelo `performance-analysis-agent`) — na dúvida, tratar como `insufficient_data` e propor um experimento novo em vez de "coroar" um vencedor.
+- Não pode propor um experimento que varie mais de uma dimensão ao mesmo tempo entre as variantes.
 - Não pode pular a pipeline normal de research/strategy/script/creative para as novas variantes "porque já sabe o que funciona" — cada variante ainda passa pelos QAs internos normais.
 - Não pode inventar métricas ou resultados de testes anteriores que não estejam em `experiment.json`.
 
@@ -46,5 +49,5 @@ Ao final, com o novo `experiment.json` proposto — o Orchestrator decide se aci
 ## Agentes que pode chamar
 Nenhum diretamente — devolve ao Orchestrator, que decide os próximos passos.
 
-## Status de teste (Fase 17)
-Agente novo, não testado — depende de haver pelo menos um `experiment.json` analisado ou de research/strategy reais, nenhum dos quais existe ainda nesta pipeline.
+## Status de teste (Fase 18)
+Ainda não testado — depende de haver pelo menos um `experiment.json` analisado ou de research/strategy reais, nenhum dos quais existe ainda nesta pipeline.

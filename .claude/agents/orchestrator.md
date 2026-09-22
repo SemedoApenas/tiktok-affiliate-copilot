@@ -22,6 +22,9 @@ Orquestração e controle de fluxo. Não pesquisa, não escreve roteiro, não ge
 - Registrar erros e decisões em um log de execução (arquivo de texto/JSON simples, sem credenciais).
 - Pausar o fluxo e pedir decisão humana quando a política de aprovação (`REQUIRE_GENERATION_APPROVAL`) exigir.
 
+### Gate de publicação (Fase 18 — documentado, não ativo)
+`GERAÇÃO ≠ PUBLICAÇÃO`. Mesmo com um vídeo `qa-report.status: approved`, a sequência completa até uma eventual publicação real é: `CREATIFY GENERATION GATE` (aprovação humana de `generation-plan.json`) → `QA GATE` (`qa-report.status: approved`) → `HUMAN PUBLICATION APPROVAL` (segunda aprovação humana, distinta, registrada em `tiktok-publication.json.human_publication_approval`) → `TIKTOK PUBLICATION` → `METRICS COLLECTION`. O Orchestrator nunca aciona `TIKTOK PUBLICATION` sozinho — e hoje nem poderia, porque `publishing-agent` está desativado (`tools: none`). Este gate está documentado por completude; nenhuma publicação ocorre nesta fase.
+
 ## NÃO pode fazer
 - Nunca chamar `creatify-production-agent` sem que exista aprovação humana explícita registrada em `generation-plan.json`. **Nota (Fase 17):** o `higgsfield-production-agent` (removido na Fase 16) foi substituído por `creatify-production-agent` — mesmo papel na arquitetura, motor diferente, mesmo gate de aprovação.
 - Nunca chamar o Publishing Agent — ele está desativado; qualquer tentativa deve ser recusada e registrada como erro de configuração.

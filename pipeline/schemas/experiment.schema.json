@@ -4,7 +4,7 @@
   "title": "Experiment",
   "description": "Registra um experimento controlado (ex.: 3 hooks diferentes para o mesmo produto), suas variantes, métricas comparadas e a hipótese/aprendizado resultante. Produzido pelo performance-analysis-agent (leitura de métricas + comparação) e consumido pelo creative-iteration-agent (geração de novos briefs). Correlação != causalidade: 'learning' nunca deve declarar causalidade sem 'confidence' e 'evidence_basis' explícitos.",
   "type": "object",
-  "required": ["schema_version", "project_id", "created_at", "product_id", "hypothesis", "variants", "status"],
+  "required": ["schema_version", "project_id", "created_at", "product_id", "hypothesis", "variable", "variants", "status"],
   "properties": {
     "schema_version": { "type": "string", "const": "1.0.0" },
     "project_id": { "type": "string" },
@@ -13,6 +13,15 @@
     "hypothesis": {
       "type": "string",
       "description": "O que está sendo testado e por quê (ex.: 'hook de problema converte melhor que hook de demonstração para esta categoria')."
+    },
+    "variable": {
+      "type": "string",
+      "enum": ["hook", "duration", "cta", "structure", "pain_angle", "demonstration", "on_screen_text", "pace", "avatar", "visual_style", "other"],
+      "description": "A dimensão única sendo testada neste experimento (Fase 18). Um experimento bem desenhado varia UMA coisa por vez entre as variantes; se mais de uma dimensão muda ao mesmo tempo, o resultado não é interpretável — o creative-iteration-agent deve recusar propor um experimento assim."
+    },
+    "variable_reason": {
+      "type": "string",
+      "description": "Por que esta dimensão específica foi escolhida para o teste (ex.: aprendizado de um experimento anterior, lacuna identificada em research.json, ausência de dado prévio sobre essa dimensão)."
     },
     "variants": {
       "type": "array",
@@ -24,6 +33,7 @@
           "variant_id": { "type": "string" },
           "description": { "type": "string" },
           "video_id": { "type": "string" },
+          "publication_id": { "type": ["string", "null"], "description": "Referência ao registro correspondente em tiktok-publication.schema.json, quando publicado." },
           "metrics_id": { "type": ["string", "null"] }
         }
       }
@@ -48,6 +58,10 @@
         },
         "suggested_next_experiment": { "type": ["string", "null"] }
       }
+    },
+    "simulation_note": {
+      "type": ["string", "null"],
+      "description": "Preenchido apenas em dry-runs estruturais: deve conter literalmente 'SIMULATED — NOT REAL — NO EXTERNAL API CALL' quando este experimento se baseia em dados simulados. Null em qualquer execução real."
     }
   },
   "additionalProperties": false

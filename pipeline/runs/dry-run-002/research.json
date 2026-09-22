@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-002",
+  "created_at": "2026-09-22T14:05:00Z",
+  "status": "partial",
+  "gaps": [
+    "Nenhuma pesquisa real de mercado/concorrência foi feita — este é um dry-run estrutural com produto fictício, não uma execução real do research-agent."
+  ],
+  "product_summary": {
+    "pain_points_solved": [
+      "Iluminação de mesa insuficiente ou muito quente para trabalho noturno (hipótese ilustrativa, não pesquisada de verdade)"
+    ],
+    "competitors": []
+  },
+  "audience": {
+    "demographics": "Hipotético para teste estrutural: adultos 22-35 anos que trabalham/estudam em casa.",
+    "language_style": "Direto, informal, sem jargão técnico.",
+    "platform_behavior": "Não pesquisado — placeholder estrutural."
+  },
+  "creative_landscape": {
+    "common_hooks": ["Pergunta sobre o problema (ex.: 'sua mesa ainda tem luz ruim?')"],
+    "common_formats": ["demonstração de uso em close-up"],
+    "typical_duration_seconds": 25,
+    "references": []
+  }
+}

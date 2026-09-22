@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-002",
+  "created_at": "2026-09-22T14:10:00Z",
+  "status": "complete",
+  "selling_angle": {
+    "type": "pain_point",
+    "rationale": "Teste estrutural: ângulo de dor (iluminação ruim) escolhido apenas para exercitar o schema — não é uma decisão estratégica real, pois research.json.status=partial.",
+    "based_on_research_fields": ["product_summary.pain_points_solved"]
+  },
+  "cta": {
+    "text": "Compre agora pelo link",
+    "based_on_product_offer": false
+  }
+}

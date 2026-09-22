@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tiktok-shop-video-ai.local/schemas/platform-account.schema.json",
   "title": "Platform Account",
-  "description": "Representa uma conta/canal de distribuição em uma plataforma (TikTok, TikTok Shop, Instagram Reels, YouTube Shorts, Meta, etc.), independente de como o conteúdo chega até ela. Este schema NÃO implica que a publicação automática está disponível — ele só descreve a conta; a capacidade real de publicar deve ser confirmada por plataforma antes de qualquer automação (ver publishing-metadata.schema.json e CREATIFY-ARCHITECTURE.md secao 10/17). Nenhum agente lê ou grava credenciais aqui — apenas identificadores não-sensíveis.",
+  "description": "Representa uma conta/canal de distribuição em uma plataforma (TikTok, TikTok Shop, Instagram Reels, YouTube Shorts, Meta, etc.), independente de como o conteúdo chega até ela. Este schema NÃO implica que a publicação automática está disponível — ele só descreve a conta; a capacidade real de publicar deve ser confirmada por plataforma antes de qualquer automação (ver publishing-metadata.schema.json, CREATIFY-ARCHITECTURE.md secao 10, TIKTOK-ARCHITECTURE.md). NUNCA armazenar aqui um access token, refresh token ou client_secret real — apenas identificadores não-sensíveis e metadados de status. O token em si vive fora do repositório (variável de ambiente / secret manager do usuário); este schema guarda no máximo uma referência não-secreta a onde ele está.",
   "type": "object",
   "required": ["schema_version", "project_id", "created_at", "platform", "account_label", "publish_capability"],
   "properties": {
@@ -30,6 +30,32 @@
       "type": "string",
       "enum": ["not_connected", "creatify_media_buyer", "native_platform_api", "manual_upload"],
       "default": "not_connected"
+    },
+    "oauth_status": {
+      "type": "string",
+      "enum": ["not_connected", "connected", "expired", "revoked"],
+      "default": "not_connected",
+      "description": "Estado da autorização OAuth desta conta, quando a plataforma usa OAuth (ex.: TikTok Login Kit). Nunca 'connected' sem uma autorização real feita pelo usuário fora do controle de um agente."
+    },
+    "granted_scopes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Escopos OAuth efetivamente concedidos pelo usuário (ex.: 'video.publish', 'user.info.basic'), copiados do que a plataforma retornou — nunca inventados. Ver TIKTOK-ARCHITECTURE.md para os escopos documentados."
+    },
+    "token_reference": {
+      "type": ["string", "null"],
+      "description": "Referência NÃO secreta a onde o token real está armazenado (ex.: 'variável de ambiente TIKTOK_ACCESS_TOKEN' ou 'secret manager do SO, chave X'). NUNCA o valor do token em si."
+    },
+    "token_expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Validade do token, quando a plataforma expõe essa informação. Não usado para decidir nada automaticamente sem um humano renovar a autorização."
+    },
+    "app_review_status": {
+      "type": "string",
+      "enum": ["not_applicable", "unaudited", "in_review", "approved"],
+      "default": "unaudited",
+      "description": "Status do app/cliente perante o processo de auditoria da plataforma (ex.: TikTok exige auditoria para permitir posts públicos — apps não auditados só podem postar em modo privado). 'unaudited' é o padrão seguro."
     }
   },
   "additionalProperties": false

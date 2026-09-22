@@ -43,7 +43,11 @@
         }
       }
     },
-    "total_credits_spent": { "type": "number", "minimum": 0 }
+    "total_credits_spent": { "type": "number", "minimum": 0 },
+    "simulation_note": {
+      "type": ["string", "null"],
+      "description": "Preenchido apenas em dry-runs estruturais: deve conter literalmente 'SIMULATED — NOT REAL — NO EXTERNAL API CALL' quando este manifesto não corresponde a uma geração real. Null em qualquer execução real."
+    }
   },
   "additionalProperties": false
 }

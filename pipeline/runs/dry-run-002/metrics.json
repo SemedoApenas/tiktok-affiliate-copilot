@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-002",
+  "created_at": "2026-09-22T18:00:00Z",
+  "video_id": "asset-01",
+  "post_id": "SIMULATED-post-id-999222",
+  "platform": "tiktok",
+  "source": "tiktok_business_api_organic",
+  "collected_at": "2026-09-22T18:00:00Z",
+  "status": "partial",
+  "values": {
+    "views": 1230,
+    "watch_time_seconds": null,
+    "completion_rate": null,
+    "likes": 54,
+    "comments": 3,
+    "shares": 2,
+    "saves": null,
+    "clicks": null,
+    "ctr": null,
+    "conversions": null,
+    "revenue": null,
+    "roas": null,
+    "cpa": null
+  },
+  "unavailable_fields": [
+    "watch_time_seconds", "completion_rate", "saves", "clicks", "ctr",
+    "conversions", "revenue", "roas", "cpa"
+  ],
+  "notes": "SIMULATED. Campos preenchidos (views/likes/comments/shares) representam o subconjunto que a TikTok API for Business — Organic API documenta como disponível para vídeo próprio (ver TIKTOK-ARCHITECTURE.md secao 5); campos de watch_time/completion_rate/CTR/conversão ficaram null porque nenhuma fonte confirmada os fornece para conteúdo orgânico nesta pesquisa — marcados unavailable de propósito, não por falha de coleta.",
+  "simulation_note": "SIMULATED — NOT REAL — NO EXTERNAL API CALL"
+}

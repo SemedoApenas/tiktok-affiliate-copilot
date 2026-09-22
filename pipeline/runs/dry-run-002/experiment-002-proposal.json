@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-002",
+  "created_at": "2026-09-22T18:05:00Z",
+  "product_id": "dry-run-002-lumiflex-ficticio",
+  "hypothesis": "SIMULATED. Com apenas 1 variante publicada (ver experiment.json), ainda não há aprendizado real — esta proposta testa uma segunda variante de hook para tornar o experimento comparável, não porque um padrão foi observado.",
+  "variable": "hook",
+  "variable_reason": "Mesma dimensão do experimento anterior (variable=hook) — o creative-iteration-agent está completando o experimento em andamento com uma segunda variante, não abrindo uma dimensão nova antes da primeira ter dados suficientes.",
+  "variants": [
+    {
+      "variant_id": "variant-a-pain-hook",
+      "description": "Hook de dor (já produzido — ver experiment.json).",
+      "video_id": "asset-01",
+      "publication_id": "SIMULATED-post-id-999222",
+      "metrics_id": "dry-run-002/metrics.json"
+    },
+    {
+      "variant_id": "variant-b-demo-hook",
+      "description": "Hook de demonstração direta: 'Olha como essa luminária muda de cor em 1 segundo' — mesmo roteiro/produto/duração/CTA, só o hook muda. Ainda NÃO produzido — precisaria passar por script-agent/creative-agent/creatify-production-agent normalmente.",
+      "video_id": "NOT_YET_PRODUCED",
+      "publication_id": null,
+      "metrics_id": null
+    }
+  ],
+  "status": "planned",
+  "analysis": null,
+  "simulation_note": "SIMULATED — NOT REAL — NO EXTERNAL API CALL. Este arquivo representa a PROPOSTA do creative-iteration-agent, não uma execução — a variant-b precisaria rodar o pipeline normal (research→strategy→script→creative→Creatify→QA) antes de existir de verdade."
+}

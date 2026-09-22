@@ -17,8 +17,14 @@
     },
     "endpoint_family": {
       "type": "string",
-      "enum": ["link_to_video", "avatar_lipsync", "ai_shorts", "ai_editing", "text_to_speech", "other"],
-      "description": "Categoria de endpoint Creatify usada. Apenas 'link_to_video' tem método+path confirmados nesta fase (POST /api/link_to_videos/, GET /api/link_to_videos/{id}/) — as demais existem na documentação mas não foram verificadas endpoint a endpoint; ver CREATIFY-ARCHITECTURE.md."
+      "enum": [
+        "link_to_video", "product_to_video", "aurora", "boreal",
+        "ai_avatar_lipsync_v1", "ai_avatar_lipsync_v2", "custom_avatar_byoa",
+        "custom_template", "ai_generation", "ad_clone", "text_to_speech",
+        "iab_images", "html_interactive_ads", "ai_scripts", "ai_shorts",
+        "ai_editing", "other"
+      ],
+      "description": "Categoria de endpoint Creatify usada. Catálogo expandido na Fase 18 a partir de docs.creatify.ai/llms.txt (17 famílias confirmadas como existentes). Método+path exatos confirmados apenas para 'link_to_video' (POST/GET /api/link_to_videos/) e 'product_to_video' (POST /api/product_to_videos/gen_image/, POST /api/product_to_videos/{id}/gen_video/, GET /api/product_to_videos/{id}/) — as demais têm existência e custo confirmados, mas path exato não verificado; ver CREATIFY-ARCHITECTURE.md e CREATIFY-INTEGRATION-VALIDATION.md. 'product_to_video' é a família recomendada para o caso de uso deste projeto (produto → vídeo curto)."
     },
     "provider_job_id": {
       "type": ["string", "null"],
@@ -26,8 +32,7 @@
     },
     "provider_status": {
       "type": "string",
-      "enum": ["not_submitted", "pending", "in_queue", "running", "done", "failed"],
-      "description": "Vocabulário de status bruto da Creatify, confirmado pela documentação para link_to_video. Mantido separado do internal_status para não acoplar o resto da pipeline a mudanças na API do provider."
+      "description": "Vocabulário de status bruto da Creatify — NÃO é uniforme entre famílias de endpoint (achado da Fase 18): 'link_to_video' usa pending/in_queue/running/done/failed; 'product_to_video' usa initializing/image_generating/image_generated/video_generating/video_generated (mais um estado de falha não nomeado explicitamente na documentação consultada). Por isso este campo é texto livre, não um enum fechado — o valor exato deve ser copiado literalmente da resposta da API para a família em uso, nunca normalizado para o vocabulário de outra família. Mantido separado de internal_status para não acoplar o resto da pipeline a isso."
     },
     "internal_status": {
       "type": "string",
@@ -73,6 +78,14 @@
         "aspect_ratio": { "type": "string" },
         "duration_seconds": { "type": "number" }
       }
+    },
+    "remaining_credits_after": {
+      "type": ["number", "null"],
+      "description": "Saldo de créditos após esta chamada, se consultado via GET /api-reference/workspace/get-remainingcredits (endpoint confirmado existir na Fase 18 — formato exato da resposta não verificado). Null se não consultado."
+    },
+    "simulation_note": {
+      "type": ["string", "null"],
+      "description": "Preenchido apenas em dry-runs estruturais (ex.: dry-run-002): deve conter literalmente 'SIMULATED — NOT REAL — NO EXTERNAL API CALL' quando este registro não corresponde a uma chamada real à API do Creatify. Null em qualquer execução real."
     }
   },
   "additionalProperties": false
