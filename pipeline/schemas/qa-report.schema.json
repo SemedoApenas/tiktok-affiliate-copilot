@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/qa-report.schema.json",
+  "title": "QA Report",
+  "description": "Saída do qa-agent: consolidação dos três QAs (técnico, visual, formato TikTok). Portão final antes da aprovação humana.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "status", "technical_qa", "visual_qa", "tiktok_format_qa"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": { "type": "string", "enum": ["approved", "rejected"] },
+    "technical_qa": {
+      "type": "object",
+      "required": ["status", "checks"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail"] },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "criterion": { "type": "string" },
+              "expected": { "type": "string" },
+              "measured": { "type": "string" },
+              "result": { "type": "string", "enum": ["pass", "fail"] }
+            }
+          }
+        }
+      }
+    },
+    "visual_qa": {
+      "type": "object",
+      "required": ["status", "checks"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail"] },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "criterion": { "type": "string" },
+              "result": { "type": "string", "enum": ["pass", "fail"] },
+              "notes": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "tiktok_format_qa": {
+      "type": "object",
+      "required": ["status", "checks"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail", "needs_review"] },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "criterion": { "type": "string" },
+              "result": { "type": "string", "enum": ["pass", "fail", "needs_review"] }
+            }
+          }
+        }
+      }
+    },
+    "responsible_agent_for_fix": {
+      "type": ["string", "null"],
+      "enum": ["higgsfield-production-agent", "remotion-production-agent", null],
+      "description": "Preenchido quando status=rejected, indicando quem deve corrigir."
+    }
+  },
+  "additionalProperties": false
+}

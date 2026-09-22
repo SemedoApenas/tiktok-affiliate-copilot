@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-001",
+  "created_at": "2026-09-22T15:00:00-03:00",
+  "status": "awaiting_approval",
+  "assets_to_generate": [
+    {
+      "asset_id": "asset-shot-01",
+      "shot_id": "shot-01",
+      "model": "seedance_2_5",
+      "prompt": "Extreme close-up portrait, dry cracked lips and slightly flaky skin on a person's face, warm dim indoor lighting with a subtle uncomfortable yellowish cast, faint haze in the air suggesting a heater running nearby, subtle handheld camera micro-movement, shallow depth of field, realistic skin texture, no text overlay, vertical 9:16 composition, UGC smartphone-style cinematography, slightly uneasy mood.",
+      "estimated_credits": 2,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-03",
+      "shot_id": "shot-03",
+      "model": "seedance_2_5",
+      "prompt": "Tight close-up product shot on a wooden desk, a compact oval mini USB humidifier in matte white with a subtle silver trim, top mist nozzle just beginning to release a thin fresh cool mist that curls upward, soft diffused studio lighting from the side, shallow depth of field with the mist in sharp focus, clean minimal desk background slightly out of focus, no visible text or logo on the product, vertical 9:16 composition, realistic product photography look with gentle camera motion.",
+      "estimated_credits": 2,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-04-09",
+      "shot_id": "shot-04-09",
+      "model": "seedance_2_5",
+      "prompt": "Continuous single-take close-up product video, one uninterrupted shot: opens on an extreme close-up of the base of a compact oval matte white mini USB humidifier with a subtle silver trim, resting on a dark surface in a dim room — a diffused LED light ring at the base smoothly cycles through seven ambient colors (red, orange, yellow, green, blue, indigo, violet), soft colored glow bleeding onto the surface below, mist faintly visible above the frame, slow smooth camera push-in, cozy ambient mood (use the first ~2 seconds of this segment for the 'LED color cycling' moment). Within the same continuous take, the camera settles and the frame reveals the translucent water reservoir on the side of the same humidifier, water level slowly and visibly dropping to near-empty; immediately after, the ambient LED light ring gently fades out and switches off on its own (auto shut-off), desk surface remains clean and dry with no spill (use the final ~2.3 seconds of this segment for the 'water level dropping + auto shut-off' moment). Same product framing and consistent silver trim visible throughout both moments, soft even lighting, shallow depth of field, no visible text or logo on the product, vertical 9:16 composition. Asset compartilhado: gerado como um único clipe contínuo de 8s (mode t2v, seedance_2_5, 9:16, 1080p); o Remotion recorta os primeiros ~2.0s na posição da timeline de shot-04 e os ~2.3s finais na posição da timeline de shot-09.",
+      "estimated_credits": 2,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-05-10",
+      "shot_id": "shot-05-10",
+      "model": "gpt_image_2 (via higgsfield product-photoshoot, mode lifestyle_scene)",
+      "prompt": "A cozy, softly lit bedroom / home-office desk corner at dusk, tastefully organized and tidy: a compact oval matte white mini USB humidifier with a subtle silver trim sits centered on the desk, actively releasing a soft visible mist, ambient LED base glowing in a warm color (soft violet or blue) that gently lights nearby décor items placed neatly around it — a small potted plant, a simple picture frame, and a warm desk lamp — warm inviting atmosphere that reads simultaneously as cozy ambiance and as quiet, organized minimalist decoration, shallow depth of field with the product in sharp focus, soft natural window light mixed with the product's ambient glow, vertical 9:16 composition, no visible text or logo on the product, editorial home-lifestyle photography style. Asset compartilhado: gerado via higgsfield product-photoshoot mode lifestyle_scene, 9:16, 2k; reaproveitado nas posições da timeline de shot-05 e shot-10, sem nova geração.",
+      "estimated_credits": 1,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-06-12",
+      "shot_id": "shot-06-12",
+      "model": "gpt_image_2 (via higgsfield product-photoshoot, mode product_shot)",
+      "prompt": "Clean centered studio product shot of a compact oval matte white mini USB humidifier with a subtle silver trim, three-quarter angle, translucent water reservoir on the side clearly visible showing the water level, soft even studio lighting on a neutral light-gray studio background, the product occupies the clear middle band of the frame, with generous clean negative space in the upper third of the frame reserved for a numeric text overlay (e.g. '300ml / até 8h') and additional generous clean negative space in the bottom third of the frame reserved for a call-to-action banner overlay, sharp focus, no text, no logos, no watermark, vertical 9:16 composition, polished e-commerce hero-shot quality. Asset compartilhado: gerado via higgsfield product-photoshoot mode product_shot, 9:16, 2k; reaproveitado nas posições da timeline de shot-06 (overlay superior '300ml / até 8h') e shot-12 (overlay inferior de CTA, adicionado como vetor pelo caption-subagent), sem nova geração.",
+      "estimated_credits": 1,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-07",
+      "shot_id": "shot-07",
+      "model": "gpt_image_2 (via higgsfield product-photoshoot, mode closeup_product_with_person)",
+      "prompt": "Close-up static product photograph of a person's hand about to plug a small USB-C cable from a compact oval matte white mini USB humidifier with a subtle silver trim into the USB-C port of an open laptop on a wooden desk, cable tip held just millimeters from the port, natural daylight from a window, cozy home-office setting, sharp focus on the cable, port, and product, shallow depth of field on the background, no visible text or logo on the product, vertical 9:16 composition, authentic lifestyle product photography.",
+      "estimated_credits": 1,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    },
+    {
+      "asset_id": "asset-shot-11",
+      "shot_id": "shot-11",
+      "model": "gpt_image_2 (via higgsfield product-photoshoot, mode closeup_product_with_person)",
+      "prompt": "Close-up of an open hand holding a compact oval matte white mini USB humidifier with a subtle silver trim, resting entirely within the palm, emphasizing how small and portable it is relative to the hand, soft natural lighting, neutral blurred background, sharp focus on the product and hand, no visible text or logo on the product, vertical 9:16 composition, clean scale-comparison product photography.",
+      "estimated_credits": 1,
+      "max_attempts": 1,
+      "max_retries_on_technical_failure": 2
+    }
+  ],
+  "estimated_total_credits": 10,
+  "approval": null
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "0.1.0-draft",
+  "project_id": "dry-run-001",
+  "generated_by": "continuity-subagent",
+  "created_at": "2026-09-21T14:15:00-03:00",
+  "audit_type": "textual_structural_only",
+  "audit_round": "cost_optimization_round",
+  "audit_cycle": 2,
+  "audit_cycle_note": "Segunda e ÚLTIMA das duas auditorias permitidas nesta rodada de otimização de custo (ciclo 2/2 — FINAL). Nenhum novo ciclo de auditoria de continuidade está disponível após este relatório para esta rodada.",
+  "audit_note": "Auditoria comparando descrições/prompts entre as 13 entradas de shot de shot-list-with-prompts.json (revision 3), focada especificamente em verificar se CONT-05, CONT-06 e CONT-07 (apontados no continuity-report.json do ciclo 1/2, verdict=rejected) foram de fato resolvidos, e em checar se a revision 3 não introduziu nenhuma nova inconsistência. Nenhuma imagem/vídeo foi gerada ainda; esta é uma checagem de texto/estrutura, não visual.",
+  "source_file": "pipeline/runs/dry-run-001/shot-list-with-prompts.json",
+  "source_file_revision_audited": 3,
+  "previous_report_reference": "continuity-report.json (rodada de otimização de custo, ciclo 1/2, verdict=rejected, apontou CONT-05/CONT-06/CONT-07 contra a revision 2) — substituído por este relatório.",
+  "reference_product_description": "Corpo oval compacto, branco fosco com friso sutil prateado, bocal superior para saída da neblina, anel de luz LED difusa na base alternando entre 7 cores (vermelho, laranja, amarelo, verde, azul, anil, violeta), porta USB-C lateral, indicador de nível de água translúcido, reservatório de 300ml, autodesligamento automático quando a água acaba. Sem texto/logo visível.",
+  "verdict": "approved",
+  "summary": "Revision 3 endereça os três pontos apontados no ciclo 1/2 de forma satisfatória e sem reabrir nenhuma das checagens já aprovadas anteriormente (descrição física do produto, fundo de estúdio canônico em shot-06-12, ciclo completo de 7 cores em shot-04-09, contagem de 7 assets reais / 10 créditos). CONT-05 agora tem um critério explícito e coerente ('needs_review_rule_scene_cut' vs. 'exception_documented_continuous_evolution') que distingue estruturalmente a evolução contínua de um único objeto/enquadramento (shot-04-09) de um corte de cena/local/sujeito (shot-08, shot-13), e o risco técnico residual de qualidade de geração é reconhecido com transparência, não escondido, com item de verificação explícito atribuído ao asset-validation-subagent pós-geração. CONT-06 foi resolvido: o fundo de shot-08 agora é definido de forma inequívoca (fundo genérico neutro, desfocado, cinza-chumbo/quase-preto, sem textura de ambiente reconhecível) e o próprio texto declara explicitamente que não referencia nem o home-office claro de shot-07 nem o quarto escuro com luz LED colorida de shot-09/shot-04-09. CONT-07 foi resolvido: a sequência de shot-13 agora é exata (Beat 1: 0.0s-1.7s, reaproveita shot-11 com crop/zoom diferente do original; Beat 2: 1.7s-3.4s, card de texto/gráfico nativo do Remotion com ícones), shot-05-10 explicitamente NÃO é reutilizado uma terceira vez, e nenhum asset fotorrealista de 'carro' é inventado — apenas um ícone vetorial no card, com a cobertura parcial declarada como decisão consciente de orçamento. Nenhuma das três correções reverteu a otimização de custo (7 assets reais / 10 créditos preservados). Aprovado.",
+  "cont_issues_resolution_check": [
+    {
+      "id": "CONT-05",
+      "status": "resolved",
+      "verification": "revision_log revisão 3 (cont_05_fix) estabelece 'needs_review_rule_scene_cut' (corte de cena/local/sujeito → needs_review=true, aplicado a shot-08 e shot-13) e 'exception_documented_continuous_evolution' (evolução contínua do mesmo objeto no mesmo enquadramento, sem corte de câmera/local/sujeito → shot-04-09 permanece needs_review=false). O critério é internamente coerente com os exemplos originais de CONT-03 (troca de objeto conectado em shot-08 = corte de sujeito; troca de ambiente em shot-13 = corte de local) e não é aplicado de forma ad-hoc só a shot-04-09 — a distinção é estrutural (existência ou não de corte), não apenas nominal. O risco residual de qualidade de geração é registrado explicitamente em 'residual_risk_acknowledged' como incerteza técnica não garantida (não como parte da capacidade confirmada), com ação de verificação atribuída ao asset-validation-subagent após geração real, e escalonamento previsto ao Orchestrator/higgsfield-production-agent caso o clipe não entregue a continuidade prometida — isso é transparência adequada, não ocultação de risco. Cross-referência adicionada nos fusion_note de shot-04 e shot-09 para auditabilidade."
+    },
+    {
+      "id": "CONT-06",
+      "status": "resolved",
+      "verification": "Prompt de shot-08 (cont_06_fix) agora especifica um único fundo definido e explícito — 'fundo levemente desfocado, neutro e escuro (tom cinza-chumbo/quase-preto, sem textura reconhecível de ambiente)' — eliminando a ambiguidade anterior de 'reaproveitar o fundo do shot adjacente'. O texto declara explicitamente que essa escolha NÃO referencia nem o ambiente claro/diurno de shot-07 nem o quarto escuro com luz LED colorida de shot-09/shot-04-09, removendo o risco de o composition-subagent escolher um fundo contraditório com qualquer um dos dois vizinhos."
+    },
+    {
+      "id": "CONT-07",
+      "status": "resolved",
+      "verification": "Prompt de shot-13 (cont_07_fix) define agora uma sequência EXATA de 2 beats com timing preciso somando os 3.4s do shot: Beat 1 (0.0s-1.7s, shot-11 com crop/zoom diferente do uso original) e Beat 2 (1.7s-3.4s, card gráfico nativo do Remotion 'MESA • QUARTO • CARRO' + 3 ícones vetoriais). shot-05-10 é explicitamente excluído desta sequência ('NÃO é usado aqui'), permanecendo com apenas 2 aparições na timeline (shot-05 e shot-10), conforme também documentado no fusion_note de shot-10. Nenhum asset fotorrealista de carro é gerado ou inventado — apenas o ícone vetorial do card no Beat 2. O texto reforça explicitamente que a cobertura parcial de 'mesa/quarto/carro' é uma decisão consciente de orçamento (10 créditos), não uma lacuna a ser corrigida depois — atendendo ao pedido de reforço feito no ciclo 1/2."
+    }
+  ],
+  "checks_passed": [
+    "CONT-05 resolvido: critério explícito e coerente registrado (needs_review_rule_scene_cut vs. exception_documented_continuous_evolution), com risco residual de qualidade de geração reconhecido com transparência, não escondido.",
+    "CONT-06 resolvido: fundo de shot-08 definido de forma inequívoca (cinza-chumbo/quase-preto, neutro, sem textura de ambiente), sem contradizer os fundos de shot-07 (claro/diurno) nem de shot-09/shot-04-09 (quarto escuro com luz LED colorida).",
+    "CONT-07 resolvido: sequência de shot-13 agora exata (2 beats, timing 0.0-1.7s / 1.7-3.4s, conteúdo de cada beat definido), sem reusar shot-05-10 uma terceira vez, e sem inventar asset fotorrealista de carro.",
+    "Descrição física do produto (oval, matte white, subtle silver trim, sem texto/logo) permanece idêntica/quase-verbatim em todos os 7 assets reais — nenhuma regressão introduzida pela revision 3.",
+    "Frase canônica de fundo de estúdio ('soft even studio lighting on a neutral light-gray studio background', CONT-01) mantida em shot-06-12, inalterada pela revision 3.",
+    "Ciclo completo das 7 cores do LED (red, orange, yellow, green, blue, indigo, violet) permanece consistente em shot-04-09, inalterado pela revision 3.",
+    "Contagem de metadados consistente após a revision 3: 13 shots totais, 10 com modelo confirmado, 3 resolvidos sem geração, needs_review=0, 7 assets reais distintos — bate com cost_optimization_round e summary.",
+    "OBS-01 do ciclo 1/2 (cor única em shot-05-10 vs. ciclo de 7 cores) já está registrada explicitamente no fusion_note de shot-05 como decisão intencional — não bloqueante, e já endereçada na prática."
+  ],
+  "new_issues_found": [],
+  "minor_non_blocking_observations": [
+    {
+      "id": "OBS-02",
+      "status": "still_open_non_blocking",
+      "severity": "cosmetic",
+      "shots_involved": ["shot-04-09"],
+      "description": "Ainda não descrito no prompt o que ocorre nos ~3.7s de 'margem de transição no meio' do clipe de 8s de shot-04-09 (entre o fim do ciclo de LED e o início da revelação do reservatório). Não é uma contradição, apenas uma lacuna de direção que pode ser deixada para o gerador. Não bloqueia esta aprovação; pode ser refinado antes da geração real, se desejado."
+    },
+    {
+      "id": "OBS-03",
+      "severity": "low",
+      "shots_involved": ["shot-04-09"],
+      "description": "O critério 'exception_documented_continuous_evolution' (CONT-05 fix) descreve a exceção como 'MESMO ENQUADRAMENTO' ao longo de todo o clipe, mas o prompt em si descreve um leve movimento de câmera ('slow smooth camera push-in' seguido de 'the camera settles and the frame reveals the translucent water reservoir on the side of the same humidifier') — ou seja, há reenquadramento dentro do mesmo take contínuo (revelando um lado diferente do mesmo objeto), não um enquadramento estritamente estático. Isso não contradiz o critério estabelecido (a distinção central é 'corte' vs. 'não-corte', e aqui não há corte de câmera/local/sujeito, apenas movimento contínuo de câmera revelando mais do mesmo objeto), mas é uma nuance que reforça — em vez de invalidar — o próprio risco residual já reconhecido em cont_05_fix ('pode perder a continuidade do enquadramento entre as duas fases'). Não bloqueante; recomenda-se que o asset-validation-subagent preste atenção específica a essa transição de enquadramento ao validar o clipe real, além dos pontos já listados em residual_risk_acknowledged."
+    }
+  ],
+  "pending_items_not_blocking_verdict": [
+    "Risco técnico residual de shot-04-09 (continuidade visual e timing de duas fases dentro de um único take de 8s) permanece uma incerteza NÃO resolvida por esta auditoria de continuidade — por definição, não pode ser resolvida sem geração real. Fica formalmente atribuída ao asset-validation-subagent como verificação obrigatória pós-geração (se/quando aprovada pelo humano), com escalonamento ao Orchestrator/higgsfield-production-agent caso o clipe não entregue a evolução coerente prometida (ex.: dividir em dois jobs, revertendo a fusão).",
+    "OBS-02 (transição intermediária de shot-04-09 sem descrição explícita) segue aberta como refinamento opcional, não bloqueante.",
+    "Cobertura visual parcial de shot-13 (ausência de imagem real para 'mesa', 'quarto' e 'carro' — apenas ícones vetoriais e reaproveitamento de shot-11) é uma decisão consciente de orçamento, já documentada como tal; não é um item de continuidade pendente, mas fica registrado aqui para visibilidade downstream (QA/curadoria humana) já que não há mais ciclos de auditoria de continuidade nesta rodada."
+  ],
+  "next_step": "APROVADO nesta rodada de otimização de custo (ciclo 2/2 — FINAL). Não há mais ciclos de auditoria de continuidade disponíveis nesta rodada; shot-list-with-prompts.json (revision 3) está liberado, do ponto de vista de continuidade textual/estrutural, para seguir no pipeline (creative-plan.json e, em seguida, para geração real somente mediante aprovação humana explícita em generation-plan.json, conforme regra absoluta do projeto). Os itens residuais listados em 'pending_items_not_blocking_verdict' (risco de geração de shot-04-09, transição intermediária não descrita, cobertura parcial consciente de shot-13) não são bloqueios de continuidade, mas devem ser acompanhados nas etapas seguintes (asset-validation-subagent e QA), já que este subagente não fará mais nenhuma auditoria de continuidade adicional nesta rodada."
+}

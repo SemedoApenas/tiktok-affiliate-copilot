@@ -1,0 +1,28 @@
+[
+  {
+    "run_id": "dry-run-001",
+    "agent": "orchestrator",
+    "action": "validou product.json",
+    "timestamp": "2026-09-21T09:05:00-03:00",
+    "target_artifact": "pipeline/runs/dry-run-001/product.json",
+    "validated_against_schema": "pipeline/schemas/product.schema.json",
+    "checks": {
+      "required_fields_present": true,
+      "schema_version_matches_const": true,
+      "status_is_complete": true,
+      "product_required_fields_present": true,
+      "price_fields_valid": true,
+      "additional_properties_ok": true
+    },
+    "resultado": "ok",
+    "detalhe": "product.json válido contra product.schema.json. status=complete, campos obrigatórios presentes (schema_version, project_id, created_at, status, product.name, product.category, product.description, product.price.amount, product.price.currency)."
+  },
+  {
+    "run_id": "dry-run-001",
+    "agent": "orchestrator",
+    "action": "verificou pré-condição para chamar research-agent",
+    "timestamp": "2026-09-21T09:05:05-03:00",
+    "resultado": "ok",
+    "detalhe": "Pré-condição satisfeita: product.json existe e está status=complete. research-agent está apto a ser chamado na próxima etapa do fluxo. Nenhum agente foi chamado nesta sessão (dry-run textual, apenas validação)."
+  }
+]

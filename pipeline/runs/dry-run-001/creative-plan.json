@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-001",
+  "created_at": "2026-09-22T10:00:00-03:00",
+  "status": "complete",
+  "shots": [
+    {
+      "shot_id": "shot-01",
+      "script_block_order": 1,
+      "description": "Close-up no rosto de uma pessoa mostrando pele ressecada e lábios rachados, em ambiente que sugere ar seco (ex: perto de aquecedor/ventilador ligado, luz um pouco amarelada e desconfortável). [Rodada de otimização de custo] Mantido inalterado.",
+      "duration_seconds": 1.4,
+      "shot_type": "lifestyle",
+      "higgsfield_model": "seedance_2_5",
+      "prompt": "Extreme close-up portrait, dry cracked lips and slightly flaky skin on a person's face, warm dim indoor lighting with a subtle uncomfortable yellowish cast, faint haze in the air suggesting a heater running nearby, subtle handheld camera micro-movement, shallow depth of field, realistic skin texture, no text overlay, vertical 9:16 composition, UGC smartphone-style cinematography, slightly uneasy mood.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-02",
+      "script_block_order": 1,
+      "description": "Texto de impacto sobreposto na tela reforçando a pergunta do gancho (ex.: 'AR SECO DE NOVO?'), mantendo a cena anterior ao fundo levemente desfocada. [OTIMIZAÇÃO DE CUSTO] Geração própria eliminada — este shot deixa de ser um asset Higgsfield distinto e passa a ser resolvido inteiramente como composição no Remotion sobre o frame já gerado de shot-01. Fusion/resolution note: decisão do Orchestrator (rodada de auditoria de custo dry-run-001) elimina 1 geração Higgsfield reaproveitando o frame de shot-01 diretamente na composição.",
+      "duration_seconds": 1.4,
+      "shot_type": "text_on_screen",
+      "higgsfield_model": "NONE — reused: Remotion aplica blur + espaço para texto sobre o asset gerado de shot-01, sem geração nova",
+      "prompt": "Instrução de composição para o composition-subagent (Remotion, sem geração Higgsfield): pegar o frame/clipe já gerado de shot-01 (close-up de pele ressecada e lábios rachados) e, no ponto da timeline correspondente a shot-02, aplicar um blur gaussiano leve sobre toda a imagem para reduzir contraste e distração visual, mantendo a cena reconhecível ao fundo; reservar uma área negativa limpa no terço superior do frame (sem elementos de alto contraste nessa faixa) para o overlay de texto de impacto 'AR SECO DE NOVO?' que será adicionado pelo caption-subagent; nenhum novo asset visual é gerado — reaproveita-se o mesmo frame de shot-01.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-03",
+      "script_block_order": 2,
+      "description": "Plano fechado do mini umidificador sobre uma mesa, câmera captando o início da neblina saindo do bocal do produto. [Rodada de otimização de custo] Mantido inalterado.",
+      "duration_seconds": 2.5,
+      "shot_type": "product_closeup",
+      "higgsfield_model": "seedance_2_5",
+      "prompt": "Tight close-up product shot on a wooden desk, a compact oval mini USB humidifier in matte white with a subtle silver trim, top mist nozzle just beginning to release a thin fresh cool mist that curls upward, soft diffused studio lighting from the side, shallow depth of field with the mist in sharp focus, clean minimal desk background slightly out of focus, no visible text or logo on the product, vertical 9:16 composition, realistic product photography look with gentle camera motion.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-04",
+      "script_block_order": 2,
+      "description": "Close-up na base do umidificador mostrando a luz interna alternando entre as sete cores, destacando o efeito ambiente. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-09] Usa os primeiros ~2.0s do clipe compartilhado 'shot-04-09' (ciclo de cores do LED). O trecho final do mesmo clipe (nível de água baixando + autodesligamento) é usado na posição de shot-09 na timeline. Fusion note: shot-04 e shot-09 referenciam o mesmo asset_id ('shot-04-09') e o mesmo prompt; o composition-subagent do Remotion corta o mesmo clipe em dois pontos da timeline (shot-04: primeiros ~2.0s; shot-09: trecho final ~2.3s). Esta fusão não se enquadra na regra needs_review de corte de cena/local/sujeito (aplicada a shot-08 e shot-13 antes de sua eliminação): é uma evolução contínua do mesmo objeto no mesmo enquadramento, sem troca de câmera/local/sujeito (critério CONT-05, ver continuity report). Risco técnico residual de qualidade de geração (continuidade das duas fases dentro de um único take de 8s) reconhecido e atribuído ao asset-validation-subagent para verificação obrigatória após geração real.",
+      "duration_seconds": 2.0,
+      "shot_type": "product_closeup",
+      "higgsfield_model": "seedance_2_5",
+      "prompt": "Continuous single-take close-up product video, one uninterrupted shot: opens on an extreme close-up of the base of a compact oval matte white mini USB humidifier with a subtle silver trim, resting on a dark surface in a dim room — a diffused LED light ring at the base smoothly cycles through seven ambient colors (red, orange, yellow, green, blue, indigo, violet), soft colored glow bleeding onto the surface below, mist faintly visible above the frame, slow smooth camera push-in, cozy ambient mood (use the first ~2 seconds of this segment for the 'LED color cycling' moment). Within the same continuous take, the camera settles and the frame reveals the translucent water reservoir on the side of the same humidifier, water level slowly and visibly dropping to near-empty; immediately after, the ambient LED light ring gently fades out and switches off on its own (auto shut-off), desk surface remains clean and dry with no spill (use the final ~2.3 seconds of this segment for the 'water level dropping + auto shut-off' moment). Same product framing and consistent silver trim visible throughout both moments, soft even lighting, shallow depth of field, no visible text or logo on the product, vertical 9:16 composition. [Asset compartilhado: asset_id 'shot-04-09', gerado como um único clipe contínuo de 8s (mode t2v, seedance_2_5, 9:16, 1080p); o Remotion recorta cada trecho na posição correta da timeline.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-05",
+      "script_block_order": 2,
+      "description": "Plano mais aberto do ambiente (quarto ou mesa de trabalho) com o produto ligado, neblina visível e luz colorida criando atmosfera aconchegante. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-10] Usa a imagem compartilhada 'shot-05-10' na posição de bloco 1, enfatizando o momento 'ambiente aconchegante'. Fusion note: shot-05 e shot-10 referenciam o mesmo asset_id ('shot-05-10') e o mesmo prompt; o Remotion reaproveita a mesma imagem em dois pontos da timeline — bloco 1 ('ambiente aconchegante') e bloco 3 ('decoração organizada'). Esta é a única e primeira aparição planejada de 'shot-05-10'; uma segunda aparição ocorre em shot-10 e nenhuma terceira aparição é planejada (ver shot-13).",
+      "duration_seconds": 1.9,
+      "shot_type": "lifestyle",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode lifestyle_scene)",
+      "prompt": "A cozy, softly lit bedroom / home-office desk corner at dusk, tastefully organized and tidy: a compact oval matte white mini USB humidifier with a subtle silver trim sits centered on the desk, actively releasing a soft visible mist, ambient LED base glowing in a warm color (soft violet or blue) that gently lights nearby décor items placed neatly around it — a small potted plant, a simple picture frame, and a warm desk lamp — warm inviting atmosphere that reads simultaneously as cozy ambiance and as quiet, organized minimalist decoration, shallow depth of field with the product in sharp focus, soft natural window light mixed with the product's ambient glow, vertical 9:16 composition, no visible text or logo on the product, editorial home-lifestyle photography style. [Asset compartilhado: asset_id 'shot-05-10', gerado via higgsfield product-photoshoot mode lifestyle_scene, 9:16, 2k, reaproveitado também em shot-10.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-06",
+      "script_block_order": 3,
+      "description": "Produto em destaque com texto na tela reforçando os números-chave ('300ml' e 'até 8 horas'), reservatório de água visível. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-12] Usa a imagem compartilhada 'shot-06-12', aproveitando o espaço negativo SUPERIOR para o overlay '300ml / até 8h'. Fusion note: shot-06 e shot-12 referenciam o mesmo asset_id ('shot-06-12') e o mesmo prompt; a imagem tem espaço negativo limpo tanto no topo quanto na base, e o Remotion reaproveita a mesma imagem em dois pontos da timeline com overlays diferentes. NÃO renderizar '300ml' / '8 horas' ou qualquer texto/banner na imagem gerada — todo texto/CTA vem como overlay do Remotion (caption-subagent).",
+      "duration_seconds": 2.5,
+      "shot_type": "text_on_screen",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode product_shot)",
+      "prompt": "Clean centered studio product shot of a compact oval matte white mini USB humidifier with a subtle silver trim, three-quarter angle, translucent water reservoir on the side clearly visible showing the water level, soft even studio lighting on a neutral light-gray studio background, the product occupies the clear middle band of the frame, with generous clean negative space in the upper third of the frame reserved for a numeric text overlay (e.g. '300ml / até 8h') and additional generous clean negative space in the bottom third of the frame reserved for a call-to-action banner overlay, sharp focus, no text, no logos, no watermark, vertical 9:16 composition, polished e-commerce hero-shot quality. [Asset compartilhado: asset_id 'shot-06-12', gerado via higgsfield product-photoshoot mode product_shot, 9:16, 2k, reaproveitado também em shot-12.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-07",
+      "script_block_order": 3,
+      "description": "Mãos conectando o cabo USB do umidificador a um notebook, demonstrando praticidade de uso no ambiente de trabalho. [OTIMIZAÇÃO DE CUSTO — REBAIXADO de vídeo para imagem] Passa de seedance_2_5 (vídeo) para gpt_image_2 via product-photoshoot (imagem estática), reduzindo o custo da geração. Downgrade note: anteriormente gerado como vídeo (seedance_2_5, t2v); a ação de 'plugar o cabo' passa a ser representada por um único frame decisivo (mão a milímetros do encaixe) em vez de um clipe de vídeo completo.",
+      "duration_seconds": 2.5,
+      "shot_type": "hands_using",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode closeup_product_with_person)",
+      "prompt": "Close-up static product photograph of a person's hand about to plug a small USB-C cable from a compact oval matte white mini USB humidifier with a subtle silver trim into the USB-C port of an open laptop on a wooden desk, cable tip held just millimeters from the port, natural daylight from a window, cozy home-office setting, sharp focus on the cable, port, and product, shallow depth of field on the background, no visible text or logo on the product, vertical 9:16 composition, authentic lifestyle product photography.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-08",
+      "script_block_order": 3,
+      "description": "Mãos conectando o mesmo cabo USB a um power bank e, em seguida, a um carregador de tomada, reforçando a versatilidade de fontes de energia. [OTIMIZAÇÃO DE CUSTO] Geração própria eliminada definitivamente (decisão final, não mais needs_review pendente) — resolvido como motion graphics nativo do Remotion (ícones vetoriais), sem asset Higgsfield. Resolution note: elimina 1 geração Higgsfield que antes estava needs_review (troca de fonte de energia via 'quick match cut', não suportada com confiança em um único job contínuo do Seedance 2.5). Fundo especificado explicitamente como fundo neutro genérico, desfocado, cinza-chumbo/quase-preto, sem textura de ambiente reconhecível — que não referencia nem o home-office claro/diurno de shot-07 nem o quarto escuro com luz LED colorida de shot-09/shot-04-09 (correção CONT-06 aplicada nesta rodada).",
+      "duration_seconds": 2.3,
+      "shot_type": "hands_using",
+      "higgsfield_model": "NONE — resolvido no Remotion (motion graphics nativo: ícones de notebook / power bank / carregador aparecendo em sincronia com a fala, sem asset gerado)",
+      "prompt": "Instrução de motion graphics para o composition-subagent (Remotion, sem geração Higgsfield): sobre um fundo neutro genérico definido especificamente para este shot — um fundo levemente desfocado, neutro e escuro (tom cinza-chumbo/quase-preto, sem textura reconhecível de nenhum ambiente específico) — que NÃO faz referência visual nem ao home-office claro/diurno de shot-07 nem ao quarto escuro com luz LED colorida de shot-09/shot-04-09, escolhido deliberadamente para não sugerir contradição com nenhum dos dois ambientes divergentes; animar três ícones vetoriais simples em sequência rápida e sincronizada com a fala do locutor ao mencionar cada fonte de energia — ícone de notebook, ícone de power bank, ícone de carregador de tomada — cada ícone entrando com um fade-in/slide-in leve, permanecendo por cerca de 0.7-0.8s cada dentro dos 2.3s do shot, com um pequeno ícone de raio ou cabo USB-C conectando visualmente ao produto; estilo gráfico simples, linha fina, cores neutras alinhadas à identidade visual do vídeo; nenhum asset fotorrealista é gerado — é motion graphics puro construído nativamente no Remotion.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-09",
+      "script_block_order": 3,
+      "description": "Close-up no reservatório de água mostrando o nível baixando e, na sequência, a luz do produto se apagando sozinha ao esvaziar (autodesligamento), sem vazamento ou bagunça na mesa. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-04] Usa o trecho final (~2.3s) do clipe compartilhado 'shot-04-09' (nível de água baixando + autodesligamento). Os primeiros ~2.0s do mesmo clipe (ciclo de cores do LED) são usados na posição de shot-04 na timeline. Fusion note: mesmo asset_id 'shot-04-09' e mesmo prompt de shot-04. Esta fusão não se enquadra na regra needs_review de corte de cena/local/sujeito (critério CONT-05): é uma evolução contínua do mesmo objeto no mesmo enquadramento, sem troca de câmera/local/sujeito. Risco técnico residual de continuidade entre as duas fases do clipe de 8s reconhecido e atribuído ao asset-validation-subagent para verificação obrigatória após geração real, com escalonamento ao Orchestrator/higgsfield-production-agent se necessário.",
+      "duration_seconds": 2.3,
+      "shot_type": "product_closeup",
+      "higgsfield_model": "seedance_2_5",
+      "prompt": "Continuous single-take close-up product video, one uninterrupted shot: opens on an extreme close-up of the base of a compact oval matte white mini USB humidifier with a subtle silver trim, resting on a dark surface in a dim room — a diffused LED light ring at the base smoothly cycles through seven ambient colors (red, orange, yellow, green, blue, indigo, violet), soft colored glow bleeding onto the surface below, mist faintly visible above the frame, slow smooth camera push-in, cozy ambient mood (use the first ~2 seconds of this segment for the 'LED color cycling' moment). Within the same continuous take, the camera settles and the frame reveals the translucent water reservoir on the side of the same humidifier, water level slowly and visibly dropping to near-empty; immediately after, the ambient LED light ring gently fades out and switches off on its own (auto shut-off), desk surface remains clean and dry with no spill (use the final ~2.3 seconds of this segment for the 'water level dropping + auto shut-off' moment). Same product framing and consistent silver trim visible throughout both moments, soft even lighting, shallow depth of field, no visible text or logo on the product, vertical 9:16 composition. [Mesmo clipe de 8s gerado para shot-04 (asset_id 'shot-04-09'); o Remotion recorta o trecho final ~2.3s para este ponto da timeline.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-10",
+      "script_block_order": 4,
+      "description": "Plano de ambiente mostrando o umidificador funcionando silenciosamente ao lado de outros itens decorativos em uma mesa organizada (plantas, porta-retrato, luminária), sugerindo integração estética. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-05] Usa a imagem compartilhada 'shot-05-10' na posição de bloco 3, enfatizando o momento 'decoração organizada'. Fusion note: mesmo asset_id 'shot-05-10' e mesmo prompt de shot-05. Esta é a 2ª e última aparição planejada de 'shot-05-10' na timeline — shot-13 foi redesenhado para NÃO reaproveitar esta imagem uma terceira vez, evitando risco de repetição perceptível (correção CONT-07 aplicada nesta rodada).",
+      "duration_seconds": 2.0,
+      "shot_type": "lifestyle",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode lifestyle_scene)",
+      "prompt": "A cozy, softly lit bedroom / home-office desk corner at dusk, tastefully organized and tidy: a compact oval matte white mini USB humidifier with a subtle silver trim sits centered on the desk, actively releasing a soft visible mist, ambient LED base glowing in a warm color (soft violet or blue) that gently lights nearby décor items placed neatly around it — a small potted plant, a simple picture frame, and a warm desk lamp — warm inviting atmosphere that reads simultaneously as cozy ambiance and as quiet, organized minimalist decoration, shallow depth of field with the product in sharp focus, soft natural window light mixed with the product's ambient glow, vertical 9:16 composition, no visible text or logo on the product, editorial home-lifestyle photography style. [Mesma imagem gerada para shot-05 (asset_id 'shot-05-10'); reaproveitada aqui sem nova geração.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-11",
+      "script_block_order": 4,
+      "description": "Close-up de uma mão segurando o produto para evidenciar o tamanho compacto, comparando-o em escala com a palma da mão. [Rodada de otimização de custo] Mantido inalterado.",
+      "duration_seconds": 1.9,
+      "shot_type": "hands_using",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode closeup_product_with_person)",
+      "prompt": "Close-up of an open hand holding a compact oval matte white mini USB humidifier with a subtle silver trim, resting entirely within the palm, emphasizing how small and portable it is relative to the hand, soft natural lighting, neutral blurred background, sharp focus on the product and hand, no visible text or logo on the product, vertical 9:16 composition, clean scale-comparison product photography.",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-12",
+      "script_block_order": 5,
+      "description": "Produto em destaque centralizado com texto/banner de call-to-action na tela (ex.: ícone do TikTok Shop e chamada 'Compre agora'), reforçando a ação desejada. [OTIMIZAÇÃO DE CUSTO — FUNDIDO com shot-06] Usa a imagem compartilhada 'shot-06-12', aproveitando o espaço negativo INFERIOR para o banner de CTA. Fusion note: mesmo asset_id 'shot-06-12' e mesmo prompt de shot-06. NÃO gerar o ícone/logo real do TikTok Shop nem o texto 'Compre agora' via modelo de imagem — risco de logo incorreto/distorcido; banner de CTA e ícone oficial devem ser adicionados como overlay vetorial pelo caption-subagent no Remotion, sobre o espaço negativo inferior desta mesma imagem.",
+      "duration_seconds": 3.4,
+      "shot_type": "text_on_screen",
+      "higgsfield_model": "gpt_image_2 (via higgsfield product-photoshoot, mode product_shot)",
+      "prompt": "Clean centered studio product shot of a compact oval matte white mini USB humidifier with a subtle silver trim, three-quarter angle, translucent water reservoir on the side clearly visible showing the water level, soft even studio lighting on a neutral light-gray studio background, the product occupies the clear middle band of the frame, with generous clean negative space in the upper third of the frame reserved for a numeric text overlay (e.g. '300ml / até 8h') and additional generous clean negative space in the bottom third of the frame reserved for a call-to-action banner overlay, sharp focus, no text, no logos, no watermark, vertical 9:16 composition, polished e-commerce hero-shot quality. [Mesma imagem gerada para shot-06 (asset_id 'shot-06-12'); reaproveitada aqui sem nova geração.]",
+      "needs_review": false
+    },
+    {
+      "shot_id": "shot-13",
+      "script_block_order": 5,
+      "description": "Montagem rápida do produto em três contextos citados na fala — sobre a mesa, no quarto e dentro do carro — fechando o vídeo mostrando versatilidade de uso. [OTIMIZAÇÃO DE CUSTO] Geração própria eliminada definitivamente (decisão final, não mais needs_review pendente) — resolvido com exatamente 2 beats: shot-11 (crop diferente) + card de texto/gráfico nativo do Remotion, sem asset Higgsfield dedicado. Resolution note: elimina 1 geração Higgsfield que antes estava needs_review (montagem em 3 ambientes distintos incluindo 'carro', não suportada com confiança em um único job contínuo do Seedance 2.5, e sem asset dedicado de 'carro' no orçamento disponível). Sequência redefinida (correção CONT-07 aplicada nesta rodada) para evitar uma 3ª aparição de 'shot-05-10' na timeline; ver prompt para a sequência exata de cortes. Cobertura visual parcial de 'mesa/quarto/carro' (sem imagem real para nenhum dos três; apenas ícones vetoriais e reaproveitamento de shot-11) é uma decisão consciente de orçamento (10 créditos), não uma lacuna a ser corrigida depois.",
+      "duration_seconds": 3.4,
+      "shot_type": "lifestyle",
+      "higgsfield_model": "NONE — resolvido no Remotion em 2 beats fixos: (1) reaproveita o asset já gerado de shot-11 com crop/zoom diferente do uso original, (2) card de texto/gráfico 100% nativo do Remotion ('MESA • QUARTO • CARRO' + ícones); menção a 'carro' permanece apenas na fala do CTA e no ícone do card, sem asset visual fotorrealista dedicado",
+      "prompt": "Instrução de montagem para o composition-subagent (Remotion, sem geração Higgsfield) — sequência EXATA de 2 beats dentro dos 3.4s deste shot (não repete a imagem 'shot-05-10' pela terceira vez). BEAT 1 (0.0s a 1.7s, duração 1.7s): reaproveitar o asset já gerado de shot-11 (mão segurando o produto), com um CROP/ZOOM diferente do usado na aparição original de shot-11 — recorte mais fechado (zoom-in adicional de ~20-30% sobre a mão/produto, enquadramento levemente deslocado em relação ao uso anterior) para diferenciar visualmente esta segunda aparição do mesmo still; aplicar leve efeito Ken Burns (zoom-out sutil) ao longo do beat; sincronizado com a menção de 'na sua mesa' na fala do CTA. BEAT 2 (1.7s a 3.4s, duração 1.7s): card gráfico 100% nativo do Remotion, nenhuma imagem gerada — fundo neutro sólido ou levemente texturizado alinhado à identidade visual do vídeo, com o texto 'MESA • QUARTO • CARRO' centralizado, acompanhado de três ícones vetoriais simples em linha (ícone de mesa/escrivaninha, ícone de cama/quarto, ícone de carro) surgindo em fade-in sequencial rápido (~0.2s de intervalo entre cada ícone), reforçando visualmente os três contextos citados na fala sem exigir nenhuma cena fotorrealista adicional; sincronizado com 'no quarto ou no carro' na fala do CTA. Nenhum outro asset é reaproveitado neste shot — 'shot-05-10' NÃO é usado aqui (já apareceu em shot-05 e shot-10; uma terceira aparição tão próxima na timeline foi identificada como risco de repetição perceptível pelo espectador). 'Carro' não recebe nenhuma foto/vídeo gerado, apenas o ícone vetorial do card no beat 2 — decisão consciente de cobertura visual parcial dado o orçamento de 10 créditos, não uma lacuna a ser corrigida depois.",
+      "needs_review": false
+    }
+  ],
+  "continuity": {
+    "status": "approved",
+    "issues": [
+      {
+        "shot_ids": ["shot-04", "shot-09"],
+        "issue": "OBS-02 (cosmético, não bloqueante, herdado de continuity-report.json ciclo 2/2): ainda não descrito no prompt o que ocorre nos ~3.7s de 'margem de transição no meio' do clipe de 8s compartilhado 'shot-04-09' (entre o fim do ciclo de LED e o início da revelação do reservatório). Não é contradição, apenas lacuna de direção que pode ser refinada antes da geração real, se desejado."
+      },
+      {
+        "shot_ids": ["shot-04", "shot-09"],
+        "issue": "OBS-03 (baixa severidade, não bloqueante, herdado de continuity-report.json ciclo 2/2): o critério de exceção que mantém shot-04/shot-09 com needs_review=false descreve 'mesmo enquadramento', mas o prompt inclui um leve movimento de câmera ('slow smooth camera push-in' seguido de reenquadramento revelando o reservatório) — não há corte de câmera/local/sujeito (o que preservaria a exceção), mas é uma nuance que reforça o risco residual já reconhecido. Recomenda-se que o asset-validation-subagent preste atenção específica a essa transição de enquadramento ao validar o clipe real."
+      },
+      {
+        "shot_ids": ["shot-04", "shot-09"],
+        "issue": "Item pendente de verificação pós-geração (não bloqueante para este plano, herdado de continuity-report.json ciclo 2/2): o risco técnico residual de shot-04-09 (continuidade visual e timing das duas fases — LED cycling e água baixando/autodesligamento — dentro de um único take de 8s) é uma incerteza de qualidade de geração não resolvível por auditoria de continuidade textual. Fica formalmente atribuída ao asset-validation-subagent como verificação obrigatória após geração real (se/quando aprovada pelo humano em generation-plan.json), com escalonamento ao Orchestrator/higgsfield-production-agent caso o clipe não entregue a evolução coerente prometida (ex.: dividir em dois jobs, revertendo a fusão)."
+      },
+      {
+        "shot_ids": ["shot-13"],
+        "issue": "Nota de cobertura visual parcial (não bloqueante, herdado de continuity-report.json ciclo 2/2): shot-13 não tem imagem/vídeo real gerado para 'mesa', 'quarto' nem 'carro' — apenas reaproveitamento de shot-11 (crop diferente) e um card gráfico nativo do Remotion com ícones vetoriais. Isso é uma decisão consciente de orçamento (10 créditos), já documentada como tal na descrição/prompt de shot-13, não um item de continuidade a ser corrigido; registrado aqui para visibilidade downstream (asset-validation-subagent, QA e curadoria humana)."
+      }
+    ]
+  }
+}

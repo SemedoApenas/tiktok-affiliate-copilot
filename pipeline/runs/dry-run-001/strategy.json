@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-001",
+  "created_at": "2026-09-21T10:15:00-03:00",
+  "status": "complete",
+  "selling_angle": {
+    "type": "pain_point",
+    "rationale": "research.json sustenta um ângulo de dor de forma consistente e concreta, não apenas por um único campo isolado. Em product_summary.pain_points_solved, a lista de dores é extensa e específica (ar seco por ar-condicionado/aquecimento, pele ressecada, lábios rachados, garganta irritada, congestão nasal), todas resolvidas diretamente pelas key_features do produto (umidificação ultrassônica, 300ml, uso pessoal em mesa/quarto/carro). Em creative_landscape.common_hooks, o hook listado em primeiro lugar entre os concorrentes/criativos de referência é justamente uma pergunta de dor direta ('Struggling with dry air?' / variações sobre pele ressecada, lábios rachados, garganta irritada), reforçado por audience.language_style, que descreve o padrão de anúncios de resposta direta no TikTok Shop como abrindo pela dor antes de qualquer especificação técnica. Optei por não usar 'desire' (estética de desk setup) ou 'novelty' como ângulo principal porque, embora presentes em common_hooks e common_formats, aparecem como elementos secundários/complementares na pesquisa, não como o padrão dominante de abertura dos criativos da categoria. Também não usei 'value' como ângulo, pois research.json documenta explicitamente (na seção gaps) que o preço de mercado da concorrência direta (HISKFUN, Xenzy, Saunana) não pôde ser confirmado numericamente — construir um ângulo de valor/preço sobre esse dado ausente seria especular sobre um dado comercial não verificado. Da mesma forma, evitei 'social_proof' e 'urgency': research.json não traz números de vendas, avaliações ou prova social quantificada do próprio produto, nem qualquer prazo/estoque limitado real em product.json que sustente urgência genuína.",
+    "based_on_research_fields": [
+      "product_summary.pain_points_solved",
+      "creative_landscape.common_hooks",
+      "audience.language_style"
+    ]
+  },
+  "cta": {
+    "text": "Compre agora no TikTok Shop — acabe com o ar seco na sua mesa, quarto ou carro.",
+    "based_on_product_offer": false
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/generation-plan.schema.json",
+  "title": "Generation Plan",
+  "description": "Plano de geração Higgsfield produzido pelo higgsfield-production-agent ANTES de qualquer chamada paga. Só se torna executável quando status=approved e approval está preenchido. Implementa REQUIRE_GENERATION_APPROVAL (ver POLICIES.md).",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "status", "assets_to_generate", "estimated_total_credits"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["awaiting_approval", "approved", "rejected"]
+    },
+    "assets_to_generate": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "shot_id", "model", "prompt", "estimated_credits"],
+        "properties": {
+          "asset_id": { "type": "string" },
+          "shot_id": { "type": "string" },
+          "model": { "type": "string" },
+          "prompt": { "type": "string" },
+          "estimated_credits": { "type": "number", "minimum": 0 },
+          "max_attempts": {
+            "type": "integer",
+            "const": 1,
+            "description": "MAX_GENERATION_ATTEMPTS — fixo em 1 por rodada de aprovação (POLICIES.md)."
+          },
+          "max_retries_on_technical_failure": {
+            "type": "integer",
+            "const": 2,
+            "description": "MAX_RETRIES — apenas para falha técnica, nunca para regenerar por insatisfação de qualidade."
+          }
+        }
+      }
+    },
+    "estimated_total_credits": { "type": "number", "minimum": 0 },
+    "approval": {
+      "type": ["object", "null"],
+      "description": "Nulo até que um humano aprove explicitamente. asset-generation-subagent recusa execução se este campo estiver nulo.",
+      "properties": {
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["approved_by", "approved_at"]
+    }
+  },
+  "additionalProperties": false
+}

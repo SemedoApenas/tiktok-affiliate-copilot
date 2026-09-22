@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/log-entry.schema.json",
+  "title": "Log Entry",
+  "description": "Estrutura de uma entrada em pipeline/runs/<run_id>/log.json. log.json é um array de objetos conformes a este schema. O Orchestrator registra uma entrada por evento relevante do pipeline (chamada de agente, retorno de agente, validação de contrato, retry, consulta de skill, gate de aprovação, decisão humana) — não apenas para os próprios passos de validação do Orchestrator. Criado na Fase 15 para corrigir a lacuna de rastreabilidade identificada no dry-run-001 (log.json continha apenas 2 entradas apesar de vários agentes terem produzido artefatos).",
+  "type": "object",
+  "required": ["run_id", "timestamp", "agent", "event", "detalhe"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "agent": {
+      "type": "string",
+      "description": "Agente principal responsável pelo evento (ex.: orchestrator, research-agent, higgsfield-production-agent)."
+    },
+    "subagent": {
+      "type": ["string", "null"],
+      "description": "Subagente específico envolvido, se houver (ex.: script-qa-subagent). null quando o evento pertence diretamente ao agente principal."
+    },
+    "event": {
+      "type": "string",
+      "enum": [
+        "agent_called",
+        "agent_returned",
+        "contract_validated",
+        "contract_invalid",
+        "retry",
+        "skill_consulted",
+        "human_approval_requested",
+        "human_approval_received",
+        "gate_blocked",
+        "gate_passed",
+        "error"
+      ]
+    },
+    "input_artifact": {
+      "type": ["string", "null"],
+      "description": "Caminho do artefato de entrada consumido neste evento, se aplicável."
+    },
+    "output_artifact": {
+      "type": ["string", "null"],
+      "description": "Caminho do artefato de saída produzido neste evento, se aplicável."
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Status reportado pelo agente/subagente neste evento (ex.: complete, partial, error, awaiting_approval)."
+    },
+    "retry_count": { "type": ["integer", "null"], "minimum": 0 },
+    "retry_reason": { "type": ["string", "null"] },
+    "skills_consulted": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "human_approval": {
+      "type": ["object", "null"],
+      "properties": {
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "gate": {
+      "type": ["string", "null"],
+      "description": "Nome do gate atingido, se aplicável (ex.: generation_approval, human_video_approval)."
+    },
+    "detalhe": {
+      "type": "string",
+      "description": "Descrição textual do evento, no mesmo espírito das entradas já usadas em log.json no dry-run-001."
+    }
+  },
+  "additionalProperties": false
+}

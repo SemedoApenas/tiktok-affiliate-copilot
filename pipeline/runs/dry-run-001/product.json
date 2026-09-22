@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "dry-run-001",
+  "created_at": "2026-09-21T09:00:00-03:00",
+  "status": "complete",
+  "product": {
+    "name": "Mini Umidificador Portátil USB NebulaBrisa",
+    "category": "eletrônico portátil para casa/escritório",
+    "description": "Umidificador de ar ultrassônico compacto, alimentado por USB, com reservatório de 300ml, luz noturna colorida opcional e desligamento automático quando a água acaba. Ideal para mesa de trabalho, quarto ou carro.",
+    "price": {
+      "amount": 79.9,
+      "currency": "BRL"
+    },
+    "key_features": [
+      "Reservatório de 300ml com autonomia de até 8 horas no modo contínuo",
+      "Alimentação via cabo USB (compatível com power bank, notebook ou carregador)",
+      "Luz noturna LED com 7 cores, pode ser desligada",
+      "Desligamento automático de segurança quando o reservatório esvazia",
+      "Operação silenciosa, spray ultrassônico fino",
+      "Design compacto, cabe em qualquer mesa"
+    ]
+  }
+}

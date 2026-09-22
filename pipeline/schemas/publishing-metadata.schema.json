@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/publishing-metadata.schema.json",
+  "title": "Publishing Metadata",
+  "description": "Schema documentado para completude arquitetural. O publishing-agent está DESATIVADO no MVP — este schema não é produzido nem consumido por nenhum agente ativo nesta fase.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "status"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["not_applicable_mvp_disabled"],
+      "description": "Único valor válido enquanto o Publishing Agent estiver desativado."
+    },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "hashtags": { "type": "array", "items": { "type": "string" } },
+    "publish_approval": {
+      "type": ["object", "null"],
+      "description": "Aprovação humana distinta da aprovação de geração — não existe fluxo para preenchê-la no MVP.",
+      "properties": {
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

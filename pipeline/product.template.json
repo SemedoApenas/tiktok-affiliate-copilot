@@ -1,0 +1,28 @@
+{
+  "_AVISO": "Este arquivo NÃO é um product.json válido. É um template para preenchimento manual pelo humano responsável. Os valores abaixo são placeholders de instrução, não dados reais. Antes de usar como input real do Orchestrator: (1) substitua TODOS os placeholders por dados verdadeiros do produto real, (2) remova este campo '_AVISO' (o schema real usa additionalProperties:false e rejeita campos extras), (3) valide o resultado contra pipeline/schemas/product.schema.json, (4) só então defina 'status' como 'complete'.",
+  "schema_version": "1.0.0",
+  "project_id": "<PREENCHER: identificador único deste produto/run, ex.: produto-001>",
+  "created_at": "<PREENCHER: data/hora ISO 8601 do preenchimento, ex.: 2026-09-22T10:00:00-03:00>",
+  "status": "<NAO PREENCHER COMO \"complete\" ATE TODOS OS CAMPOS ABAIXO TEREM DADOS REAIS — o schema só aceita o valor literal \"complete\">",
+  "product": {
+    "name": "<PREENCHER: nome real do produto>",
+    "category": "<PREENCHER: categoria real do produto>",
+    "description": "<PREENCHER: descrição real e verificável do produto — não copiar texto de marketing não confirmado>",
+    "price": {
+      "amount": 0,
+      "currency": "<PREENCHER: código de moeda de 3 letras, ex.: BRL>"
+    },
+    "key_features": [
+      "<PREENCHER: característica/benefício real 1, verificável>",
+      "<PREENCHER: característica/benefício real 2, verificável>"
+    ],
+    "reference_images": [
+      "<OPCIONAL: caminho local ou URL de imagem de referência real do produto, se houver>"
+    ],
+    "tiktok_shop_url": "<OPCIONAL: URL real do anúncio/listing no TikTok Shop, se houver>",
+    "offer": {
+      "discount_code": null,
+      "promotion_deadline": null
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(higgsfield *)",
+      "Bash(higgs *)",
+      "Bash(hf *)"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tiktok-shop-video-ai.local/schemas/video-manifest.schema.json",
+  "title": "Video Manifest",
+  "description": "Saída do remotion-production-agent: metadados do vídeo composto/renderizado.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "created_at", "status", "output"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": { "type": "string", "enum": ["composing", "rendered", "error"] },
+    "render_authorized_by_orchestrator": {
+      "type": "boolean",
+      "description": "Deve ser true antes de qualquer render pesado ter sido executado."
+    },
+    "concurrency_used": {
+      "type": "integer",
+      "const": 1,
+      "description": "Sempre 1, conforme política de hardware (POLICIES.md)."
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "file_path": { "type": "string" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "aspect_ratio": { "type": "string", "const": "9:16" },
+        "fps": { "type": "integer" },
+        "duration_seconds": { "type": "number" },
+        "video_codec": { "type": "string" },
+        "audio_codec": { "type": "string" },
+        "captions_included": { "type": "boolean" },
+        "file_size_mb": { "type": "number" }
+      }
+    },
+    "error_reason": { "type": "string" }
+  },
+  "additionalProperties": false
+}

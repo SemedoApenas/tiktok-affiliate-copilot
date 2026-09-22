@@ -1,0 +1,137 @@
+{
+  "schema_version": "0.1.0-draft",
+  "project_id": "dry-run-001",
+  "created_at": "2026-09-21T11:30:00-03:00",
+  "status": "complete",
+  "note": "Shot list produzida pelo Shot List Subagent a partir de script.json (status complete). Formato livre — entra como primeira seção de creative-plan.json. Sem modelo Higgsfield nem prompt técnico.",
+  "source_script": "script.json",
+  "total_script_duration_seconds": 29.5,
+  "total_shots_duration_seconds": 29.5,
+  "shots": [
+    {
+      "shot_id": "shot-01",
+      "script_block_order": 0,
+      "script_block_label": "hook",
+      "script_text_ref": "Pele ressecada, lábios rachados, ar seco de novo?",
+      "description": "Close-up no rosto de uma pessoa mostrando pele ressecada e lábios rachados, em ambiente que sugere ar seco (ex: perto de aquecedor/ventilador ligado, luz um pouco amarelada e desconfortável).",
+      "duration_seconds": 1.4,
+      "shot_type": "lifestyle"
+    },
+    {
+      "shot_id": "shot-02",
+      "script_block_order": 0,
+      "script_block_label": "hook",
+      "script_text_ref": "Pele ressecada, lábios rachados, ar seco de novo?",
+      "description": "Texto de impacto sobreposto na tela reforçando a pergunta do gancho (ex.: 'AR SECO DE NOVO?'), mantendo a cena anterior ao fundo levemente desfocada.",
+      "duration_seconds": 1.4,
+      "shot_type": "text_on_screen"
+    },
+    {
+      "shot_id": "shot-03",
+      "script_block_order": 1,
+      "script_block_label": "bloco 1",
+      "script_text_ref": "Esse mini umidificador USB solta uma neblina fresquinha e ainda deixa seu cantinho com luz de sete cores.",
+      "description": "Plano fechado do mini umidificador sobre uma mesa, câmera captando o início da neblina saindo do bocal do produto.",
+      "duration_seconds": 2.5,
+      "shot_type": "product_closeup"
+    },
+    {
+      "shot_id": "shot-04",
+      "script_block_order": 1,
+      "script_block_label": "bloco 1",
+      "script_text_ref": "Esse mini umidificador USB solta uma neblina fresquinha e ainda deixa seu cantinho com luz de sete cores.",
+      "description": "Close-up na base do umidificador mostrando a luz interna alternando entre as sete cores, destacando o efeito ambiente.",
+      "duration_seconds": 2.0,
+      "shot_type": "product_closeup"
+    },
+    {
+      "shot_id": "shot-05",
+      "script_block_order": 1,
+      "script_block_label": "bloco 1",
+      "script_text_ref": "Esse mini umidificador USB solta uma neblina fresquinha e ainda deixa seu cantinho com luz de sete cores.",
+      "description": "Plano mais aberto do ambiente (quarto ou mesa de trabalho) com o produto ligado, neblina visível e luz colorida criando atmosfera aconchegante.",
+      "duration_seconds": 1.9,
+      "shot_type": "lifestyle"
+    },
+    {
+      "shot_id": "shot-06",
+      "script_block_order": 2,
+      "script_block_label": "bloco 2",
+      "script_text_ref": "São 300ml que rendem até 8 horas, funciona no notebook, no power bank ou no carregador — e desliga sozinho quando a água acaba, sem bagunça, sem susto.",
+      "description": "Produto em destaque com texto na tela reforçando os números-chave ('300ml' e 'até 8 horas'), reservatório de água visível.",
+      "duration_seconds": 2.5,
+      "shot_type": "text_on_screen"
+    },
+    {
+      "shot_id": "shot-07",
+      "script_block_order": 2,
+      "script_block_label": "bloco 2",
+      "script_text_ref": "São 300ml que rendem até 8 horas, funciona no notebook, no power bank ou no carregador — e desliga sozinho quando a água acaba, sem bagunça, sem susto.",
+      "description": "Mãos conectando o cabo USB do umidificador a um notebook, demonstrando praticidade de uso no ambiente de trabalho.",
+      "duration_seconds": 2.5,
+      "shot_type": "hands_using"
+    },
+    {
+      "shot_id": "shot-08",
+      "script_block_order": 2,
+      "script_block_label": "bloco 2",
+      "script_text_ref": "São 300ml que rendem até 8 horas, funciona no notebook, no power bank ou no carregador — e desliga sozinho quando a água acaba, sem bagunça, sem susto.",
+      "description": "Mãos conectando o mesmo cabo USB a um power bank e, em seguida, a um carregador de tomada, reforçando a versatilidade de fontes de energia.",
+      "duration_seconds": 2.3,
+      "shot_type": "hands_using"
+    },
+    {
+      "shot_id": "shot-09",
+      "script_block_order": 2,
+      "script_block_label": "bloco 2",
+      "script_text_ref": "São 300ml que rendem até 8 horas, funciona no notebook, no power bank ou no carregador — e desliga sozinho quando a água acaba, sem bagunça, sem susto.",
+      "description": "Close-up no reservatório de água mostrando o nível baixando e, na sequência, a luz do produto se apagando sozinha ao esvaziar (autodesligamento), sem vazamento ou bagunça na mesa.",
+      "duration_seconds": 2.3,
+      "shot_type": "product_closeup"
+    },
+    {
+      "shot_id": "shot-10",
+      "script_block_order": 3,
+      "script_block_label": "bloco 3",
+      "script_text_ref": "Silencioso, compacto e ainda vira parte da decoração da sua mesa.",
+      "description": "Plano de ambiente mostrando o umidificador funcionando silenciosamente ao lado de outros itens decorativos em uma mesa organizada (plantas, porta-retrato, luminária), sugerindo integração estética.",
+      "duration_seconds": 2.0,
+      "shot_type": "lifestyle"
+    },
+    {
+      "shot_id": "shot-11",
+      "script_block_order": 3,
+      "script_block_label": "bloco 3",
+      "script_text_ref": "Silencioso, compacto e ainda vira parte da decoração da sua mesa.",
+      "description": "Close-up de uma mão segurando o produto para evidenciar o tamanho compacto, comparando-o em escala com a palma da mão.",
+      "duration_seconds": 1.9,
+      "shot_type": "hands_using"
+    },
+    {
+      "shot_id": "shot-12",
+      "script_block_order": 4,
+      "script_block_label": "cta",
+      "script_text_ref": "Compra agora no TikTok Shop e acaba com esse ar seco na sua mesa, no quarto ou no carro.",
+      "description": "Produto em destaque centralizado com texto/banner de call-to-action na tela (ex.: ícone do TikTok Shop e chamada 'Compre agora'), reforçando a ação desejada.",
+      "duration_seconds": 3.4,
+      "shot_type": "text_on_screen"
+    },
+    {
+      "shot_id": "shot-13",
+      "script_block_order": 4,
+      "script_block_label": "cta",
+      "script_text_ref": "Compra agora no TikTok Shop e acaba com esse ar seco na sua mesa, no quarto ou no carro.",
+      "description": "Montagem rápida do produto em três contextos citados na fala — sobre a mesa, no quarto e dentro do carro — fechando o vídeo mostrando versatilidade de uso.",
+      "duration_seconds": 3.4,
+      "shot_type": "lifestyle"
+    }
+  ],
+  "coverage_check": {
+    "hook_covered": true,
+    "block_1_covered": true,
+    "block_2_covered": true,
+    "block_3_covered": true,
+    "cta_covered": true,
+    "duration_matches_script_total": true
+  }
+}
