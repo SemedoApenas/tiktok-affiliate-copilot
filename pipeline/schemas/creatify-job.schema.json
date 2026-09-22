@@ -81,7 +81,7 @@
     },
     "remaining_credits_after": {
       "type": ["number", "null"],
-      "description": "Saldo de créditos após esta chamada, se consultado via GET /api-reference/workspace/get-remainingcredits (endpoint confirmado existir na Fase 18 — formato exato da resposta não verificado). Null se não consultado."
+      "description": "Saldo de créditos após esta chamada, se consultado via GET /api/remaining_credits/ (path exato e formato de resposta {\"remaining_credits\": <number>} CONFIRMADOS DOCUMENTALMENTE na Fase 19; corrige o path incorreto — a URL da página de documentação — usado na Fase 18). Null se não consultado."
     },
     "simulation_note": {
       "type": ["string", "null"],

@@ -19,16 +19,16 @@ CREATIFY_API_KEY=<sua-api-key>
 Defina-as no seu ambiente local (shell profile, gerenciador de secrets do SO, ou mecanismo equivalente) — **nunca** em um arquivo dentro deste repositório, nunca em `pipeline/**/*.json`, nunca em um prompt de agente.
 
 ### Como testar a conexão sem gerar conteúdo pago
-A API do Creatify não documenta, até onde foi verificado nesta sessão, um endpoint de "ping"/health-check gratuito. Formas seguras de validar a configuração sem consumir créditos:
+**Atualizado na Fase 19:** `GET /api/remaining_credits/` — CONFIRMADO DOCUMENTALMENTE (path e resposta exatos: `{"remaining_credits": <number>}`) — é o teste de autenticação recomendado, por ser uma leitura simples. **NÃO CONFIRMADO** se esta própria chamada consome créditos (a documentação não afirma nem nega); testar com cautela e checar o saldo antes/depois no painel web na primeira vez.
 1. Confirmar que as variáveis de ambiente estão definidas (`echo $CREATIFY_API_ID` — nunca imprimir `CREATIFY_API_KEY` inteira em um terminal compartilhado/log).
-2. Fazer uma chamada de **leitura** documentada como gratuita (ex.: "Get avatar"/"Get voices", se confirmado como não-cobrado na documentação atual — confirme isso em `docs.creatify.ai` antes, pois não foi verificado explicitamente nesta sessão se essas consultas têm custo).
-3. Não fazer nenhuma chamada de criação (`POST /api/link_to_videos/` ou equivalente) até estar pronto para consumir créditos de verdade.
+2. Chamar `GET https://api.creatify.ai/api/remaining_credits/` com os headers `X-API-ID`/`X-API-KEY` — se retornar `{"remaining_credits": N}`, a autenticação está válida.
+3. Não fazer nenhuma chamada de criação (`POST /api/link_to_videos/`, `POST /api/product_to_videos/gen_image/` ou equivalente) até estar pronto para consumir créditos de verdade.
 
 ### Como testar geração real
-Só depois de: (a) `generation-plan.json` aprovado por um humano com `approved_by`/`approved_at` preenchidos, (b) confirmação de que o saldo de créditos é suficiente (verificado no painel da Creatify, não assumido). O `creatify-generation-subagent` então executa create→poll conforme `CREATIFY-ARCHITECTURE.md` secao 5.
+Só depois de: (a) `generation-plan.json` aprovado por um humano com `approved_by`/`approved_at` preenchidos, (b) confirmação de que o saldo de créditos é suficiente (via `GET /api/remaining_credits/` ou no painel da Creatify). O `creatify-generation-subagent` então executa create→poll conforme `CREATIFY-ARCHITECTURE.md` secao 5.
 
 ### Como verificar saldo/custos
-Não foi confirmado nesta sessão se existe um endpoint de saldo de créditos na API pública. Até confirmação, verifique o saldo diretamente no painel web da Creatify antes de aprovar qualquer `generation-plan.json`.
+**Atualizado na Fase 19:** `GET /api/remaining_credits/` (headers `X-API-ID`/`X-API-KEY`) retorna `{"remaining_credits": <number>}` — CONFIRMADO DOCUMENTALMENTE. Corrige a orientação da Fase 17/18, que apontava erroneamente a URL da página de documentação em vez do path real da API.
 
 ### Como desconectar
 Remova as variáveis de ambiente `CREATIFY_API_ID`/`CREATIFY_API_KEY` do seu ambiente. Nenhum arquivo deste projeto precisa ser alterado (nenhuma credencial é armazenada nele).

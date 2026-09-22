@@ -12,7 +12,8 @@ Nenhum app TikTok Developer existe hoje para este projeto (confirmado em `CLAUDE
 2. Registrar um app, obtendo `client_key` e `client_secret`.
 3. Adicionar o produto "Login Kit" (para OAuth de usuário) e "Content Posting API" (Direct Post) ao app.
 4. Configurar as URLs de redirecionamento OAuth.
-5. **Etapa institucional, não técnica:** submeter o app para auditoria da TikTok antes de tentar publicar em `privacy_level: PUBLIC_TO_EVERYONE`. Até a auditoria ser aprovada, qualquer teste real só pode publicar em `SELF_ONLY` (privado).
+5. **Achado da Fase 19 — só necessário se optar por PULL_FROM_URL:** verificar um domínio/prefixo de URL próprio no Developer Portal (meta tag `tiktok-developers-site-verification` ou registro DNS). O vídeo do Creatify sai hospedado em `creatify-user-uploads.s3.amazonaws.com`, domínio que não pertence a este projeto — **essa URL não pode ser verificada por nós**, então PULL_FROM_URL direto da saída do Creatify não funciona. O caminho recomendado é **FILE_UPLOAD** (baixar o MP4 do Creatify e reenviar em chunks ao TikTok), que não exige nenhuma verificação de domínio.
+6. **Etapa institucional, não técnica:** submeter o app para auditoria da TikTok antes de tentar publicar em `privacy_level: PUBLIC_TO_EVERYONE`. Até a auditoria ser aprovada, qualquer teste real só pode publicar em `SELF_ONLY` (privado).
 
 ## 2. Variáveis de ambiente necessárias (quando a publicação for implementada de verdade)
 
@@ -23,7 +24,7 @@ TIKTOK_ACCESS_TOKEN=<obtido via fluxo OAuth do usuário, não estático>
 TIKTOK_REFRESH_TOKEN=<idem>
 ```
 
-**Nunca** em arquivo do repositório, nunca em `pipeline/**/*.json`, nunca em prompt de agente. Diferente do Creatify (chave de API estática), o TikTok usa OAuth de usuário — `TIKTOK_ACCESS_TOKEN` expira e precisa ser renovado via `TIKTOK_REFRESH_TOKEN`; isso é um fluxo, não uma chave fixa, e deve ser implementado com uma biblioteca OAuth adequada quando essa fase for construída — nenhum agente deste projeto deve tentar reimplementar OAuth manualmente por conta própria.
+**Nunca** em arquivo do repositório, nunca em `pipeline/**/*.json`, nunca em prompt de agente. Diferente do Creatify (chave de API estática), o TikTok usa OAuth de usuário — `TIKTOK_ACCESS_TOKEN` expira em **24h** e precisa ser renovado via `TIKTOK_REFRESH_TOKEN` (válido por **365 dias**, e pode mudar a cada renovação — sempre usar o valor mais recente devolvido) chamando `POST https://open.tiktokapis.com/v2/oauth/token/` com `grant_type=refresh_token` (achados CONFIRMADOS da Fase 19). Isso é um fluxo, não uma chave fixa, e deve ser implementado com uma biblioteca OAuth adequada quando essa fase for construída — nenhum agente deste projeto deve tentar reimplementar OAuth manualmente por conta própria.
 
 ## 3. Escopos a solicitar
 
@@ -46,4 +47,4 @@ Revogar a autorização do app na conta TikTok do usuário (Configurações → 
 
 ## 7. Escopo desta fase
 
-Nesta fase (Fase 18), nenhuma credencial TikTok foi configurada, nenhum app foi registrado, nenhum OAuth foi testado, nenhuma publicação ocorreu. Este documento existe para que, quando o usuário decidir avançar, o caminho técnico já esteja mapeado — sem repetir a pesquisa documental do zero.
+Nas Fases 18-19, nenhuma credencial TikTok foi configurada, nenhum app foi registrado, nenhum OAuth foi testado, nenhuma publicação ocorreu. Este documento existe para que, quando o usuário decidir avançar, o caminho técnico já esteja mapeado — sem repetir a pesquisa documental do zero.

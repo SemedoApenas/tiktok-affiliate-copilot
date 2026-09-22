@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tiktok-shop-video-ai.local/schemas/tiktok-publication.schema.json",
   "title": "TikTok Publication",
-  "description": "Registro técnico de UMA tentativa de publicação via TikTok Content Posting API (Direct Post), produzido exclusivamente por tiktok-publishing-subagent — hoje `tools: none`, desativado (ver publishing-agent.md). Espelha o papel de creatify-job.schema.json na camada de geração: é a única camada da pipeline que conhece detalhes técnicos da API de publicação do TikTok. Fase 18: schema criado por completude estrutural, NENHUMA publicação real foi feita e este schema não é produzido por nenhum agente ativo ainda. Ver pipeline/orchestration/TIKTOK-ARCHITECTURE.md para CONFIRMED/NOT CONFIRMED.",
+  "description": "Registro técnico de UMA tentativa de publicação via TikTok Content Posting API (Direct Post — host real `open.tiktokapis.com`, distinto do domínio de documentação `developers.tiktok.com`), produzido exclusivamente por tiktok-publishing-subagent — hoje `tools: none`, desativado (ver publishing-agent.md). Espelha o papel de creatify-job.schema.json na camada de geração: é a única camada da pipeline que conhece detalhes técnicos da API de publicação do TikTok. Fase 19: endpoints e vocabulário de status confirmados documentalmente (ver pipeline/orchestration/TIKTOK-ARCHITECTURE.md); NENHUMA publicação real foi feita e este schema não é produzido por nenhum agente ativo ainda.",
   "type": "object",
   "required": ["schema_version", "project_id", "created_at", "platform", "internal_status", "provider_status"],
   "properties": {
@@ -21,7 +21,7 @@
     "source_method": {
       "type": "string",
       "enum": ["pull_from_url", "file_upload"],
-      "description": "Método de transferência do vídeo — CONFIRMADO DOCUMENTALMENTE que a Direct Post API suporta ambos (PULL_FROM_URL e FILE_UPLOAD). Ver TIKTOK-ARCHITECTURE.md."
+      "description": "Método de transferência do vídeo — CONFIRMADO DOCUMENTALMENTE que a Direct Post API suporta ambos (PULL_FROM_URL e FILE_UPLOAD). ACHADO DA FASE 19: PULL_FROM_URL exige que o domínio/prefixo da URL esteja verificado no TikTok Developer Portal (meta tag ou DNS) como pertencente ao app publicador — a URL de saída do Creatify (`https://creatify-user-uploads.s3.amazonaws.com/...`) pertence à Creatify, não a este projeto, e portanto NÃO pode ser verificada por nós. Na prática, `file_upload` é o caminho realista (baixar o MP4 do Creatify e reenviar em chunks via PUT ao `upload_url`), a menos que o vídeo seja primeiro re-hospedado em um domínio próprio verificado. Ver TIKTOK-ARCHITECTURE.md secao 2."
     },
     "post_info": {
       "type": "object",
@@ -44,11 +44,23 @@
     },
     "external_publication_id": {
       "type": ["string", "null"],
-      "description": "ID retornado pela TikTok na criação da publicação. Nulo até a submissão ser aceita."
+      "description": "Corresponde literalmente a `publish_id`, retornado por POST /v2/post/publish/video/init/ (host open.tiktokapis.com) — CONFIRMADO DOCUMENTALMENTE na Fase 19. Nulo até a submissão ser aceita."
     },
     "provider_status": {
       "type": "string",
-      "description": "Status bruto retornado pela TikTok Content Posting API para esta publicação. Vocabulário exato NÃO totalmente confirmado nesta fase (a página de 'Get Post Status' foi referenciada mas não verificada em detalhe) — registrar literalmente o que a API retornar, nunca normalizar para outro vocabulário."
+      "enum": ["not_submitted", "PROCESSING_UPLOAD", "PROCESSING_DOWNLOAD", "SEND_TO_USER_INBOX", "PUBLISH_COMPLETE", "FAILED"],
+      "description": "Status bruto retornado por POST /v2/post/publish/status/fetch/ — vocabulário CONFIRMADO DOCUMENTALMENTE na Fase 19 (ver TIKTOK-ARCHITECTURE.md). PROCESSING_UPLOAD só ocorre com FILE_UPLOAD; PROCESSING_DOWNLOAD só com PULL_FROM_URL; SEND_TO_USER_INBOX só no fluxo de rascunho (video.upload), não usado nesta arquitetura (que usa video.publish/Direct Post)."
+    },
+    "fail_reason": {
+      "type": ["string", "null"],
+      "description": "Valor literal do campo `fail_reason` quando provider_status=FAILED. Valores documentados confirmados na Fase 19: file_format_check_failed, duration_check_failed, picture_size_check_failed, internal, video_pull_failed, photo_pull_failed, spam_risk, spam_risk_too_many_posts, auth_removed."
+    },
+    "uploaded_bytes": { "type": ["integer", "null"], "description": "Só relevante para source_method=file_upload." },
+    "downloaded_bytes": { "type": ["integer", "null"], "description": "Só relevante para source_method=pull_from_url." },
+    "publicly_available_post_id": {
+      "type": ["array", "null"],
+      "items": { "type": "string" },
+      "description": "Campo `publicaly_available_post_id` (grafia literal da API) — só é preenchido se o post foi publicado para visualização pública E aprovado pela moderação da TikTok. CONFIRMADO DOCUMENTALMENTE. Fica vazio/null para publish_private."
     },
     "internal_status": {
       "type": "string",
@@ -66,10 +78,13 @@
       },
       "required": ["approved_by", "approved_at"]
     },
-    "failure_reason": { "type": ["string", "null"] },
+    "failure_reason": {
+      "type": ["string", "null"],
+      "description": "Resumo interno legível da falha, escrito pelo tiktok-publishing-subagent. Distinto de `fail_reason` (valor literal da API) — este campo pode adicionar contexto, mas nunca deve contradizer `fail_reason`."
+    },
     "error_code": {
       "type": ["string", "null"],
-      "description": "Código de erro literal retornado pela API, quando houver (ex.: 'unaudited_client_can_only_post_to_private_accounts' — CONFIRMADO DOCUMENTALMENTE como um erro real desta API)."
+      "description": "Código de erro literal retornado pela API, quando houver (ex.: 'unaudited_client_can_only_post_to_private_accounts' — CONFIRMADO DOCUMENTALMENTE como um erro real desta API, distinto do enum de fail_reason do endpoint de status)."
     },
     "simulation_note": {
       "type": ["string", "null"],
