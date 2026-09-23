@@ -1,6 +1,17 @@
 const STORAGE_KEY = "tiktok-affiliate-copilot:produtos";
 const ROTEIRO_STORAGE_KEY = "tiktok-affiliate-copilot:roteiros";
+const RESULTADO_STORAGE_KEY = "tiktok-affiliate-copilot:resultados";
 const MODOS_OUMOMO = ["Não definido", "Link to Video", "Viral Remake"];
+const COMPARATIVO_COLUNAS = [
+  { key: "produtoNome", label: "Produto", tipo: "texto" },
+  { key: "anguloOuHook", label: "Ângulo/Hook", tipo: "texto" },
+  { key: "modoOumomo", label: "Modo Oumomo", tipo: "texto" },
+  { key: "data", label: "Data", tipo: "data" },
+  { key: "views", label: "Views", tipo: "numero" },
+  { key: "vendas", label: "Vendas", tipo: "numero" },
+  { key: "comissaoValor", label: "Comissão (R$)", tipo: "numero" },
+  { key: "ctr", label: "CTR (%)", tipo: "numero" },
+];
 
 const form = document.getElementById("product-form");
 const productIdInput = document.getElementById("product-id");
@@ -21,6 +32,9 @@ const cancelEditBtn = document.getElementById("cancel-edit-btn");
 const productList = document.getElementById("product-list");
 const productCount = document.getElementById("product-count");
 const emptyState = document.getElementById("empty-state");
+
+const comparativoToggleBtn = document.getElementById("comparativo-toggle");
+const comparativoContainer = document.getElementById("comparativo-container");
 
 function loadProdutos() {
   try {
@@ -50,16 +64,46 @@ function saveRoteiros(roteiros) {
   localStorage.setItem(ROTEIRO_STORAGE_KEY, JSON.stringify(roteiros));
 }
 
+function loadResultados() {
+  try {
+    const raw = localStorage.getItem(RESULTADO_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error("Falha ao ler resultados do localStorage:", e);
+    return [];
+  }
+}
+
+function saveResultados(resultados) {
+  localStorage.setItem(RESULTADO_STORAGE_KEY, JSON.stringify(resultados));
+}
+
 function generateId() {
   return typeof crypto !== "undefined" && crypto.randomUUID
     ? crypto.randomUUID()
     : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function formatarDataBR(dataISO) {
+  if (!dataISO) return "—";
+  const [ano, mes, dia] = dataISO.split("-");
+  return `${dia}/${mes}/${ano}`;
+}
+
 let produtos = loadProdutos();
 let roteiros = loadRoteiros();
+let resultados = loadResultados();
 let expandedProductIds = new Set();
+let expandedRoteiroIds = new Set();
 let editingRoteiroId = null;
+let editingResultadoId = null;
+let comparativoExpanded = false;
+let comparativoSort = { coluna: "data", direcao: "desc" };
+
+function renderAll() {
+  renderProdutos();
+  renderComparativo();
+}
 
 function renderProdutos() {
   productList.innerHTML = "";
@@ -345,7 +389,7 @@ function renderRoteiroForm(produto) {
     }
 
     saveRoteiros(roteiros);
-    renderProdutos();
+    renderAll();
   });
 
   return form;
@@ -407,7 +451,440 @@ function renderRoteiroCard(roteiro) {
 
   card.appendChild(actions);
 
+  const resultadosDoRoteiro = resultados.filter((r) => r.roteiroId === roteiro.id);
+  const isResultadosExpanded = expandedRoteiroIds.has(roteiro.id);
+
+  const resultadosToggleBtn = document.createElement("button");
+  resultadosToggleBtn.type = "button";
+  resultadosToggleBtn.className = "btn-toggle-roteiros";
+  resultadosToggleBtn.textContent = `${isResultadosExpanded ? "▾" : "▸"} Resultados (${resultadosDoRoteiro.length})`;
+  resultadosToggleBtn.addEventListener("click", () => toggleResultadosPanel(roteiro.id));
+  card.appendChild(resultadosToggleBtn);
+
+  if (isResultadosExpanded) {
+    card.appendChild(renderResultadosPanel(roteiro));
+  }
+
   return card;
+}
+
+function toggleResultadosPanel(roteiroId) {
+  if (expandedRoteiroIds.has(roteiroId)) {
+    expandedRoteiroIds.delete(roteiroId);
+  } else {
+    expandedRoteiroIds.add(roteiroId);
+  }
+  renderProdutos();
+}
+
+function renderResultadosPanel(roteiro) {
+  const panel = document.createElement("div");
+  panel.className = "resultados-panel";
+
+  panel.appendChild(renderResultadoForm(roteiro));
+
+  const resultadosDoRoteiro = resultados
+    .filter((r) => r.roteiroId === roteiro.id)
+    .sort((a, b) => new Date(b.data) - new Date(a.data));
+
+  if (resultadosDoRoteiro.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Nenhum resultado registrado para este roteiro ainda.";
+    panel.appendChild(empty);
+  } else {
+    const list = document.createElement("div");
+    list.className = "resultado-list";
+    resultadosDoRoteiro.forEach((resultado) => list.appendChild(renderResultadoCard(resultado)));
+    panel.appendChild(list);
+  }
+
+  return panel;
+}
+
+function renderResultadoForm(roteiro) {
+  const editingResultado = editingResultadoId ? resultados.find((r) => r.id === editingResultadoId) : null;
+  const isEditingThis = Boolean(editingResultado && editingResultado.roteiroId === roteiro.id);
+
+  const form = document.createElement("form");
+  form.className = "resultado-form";
+  form.dataset.roteiroId = roteiro.id;
+
+  const title = document.createElement("h4");
+  title.textContent = isEditingThis ? "Editar resultado" : "Novo resultado";
+  form.appendChild(title);
+
+  const dataInput = document.createElement("input");
+  dataInput.type = "date";
+  dataInput.id = `resultado-data-${roteiro.id}`;
+  dataInput.value = isEditingThis ? editingResultado.data : new Date().toISOString().slice(0, 10);
+
+  const dataError = document.createElement("span");
+  dataError.className = "error";
+
+  const dataField = document.createElement("div");
+  dataField.className = "field";
+  const dataLabel = document.createElement("label");
+  dataLabel.textContent = "Data *";
+  dataLabel.htmlFor = dataInput.id;
+  dataField.append(dataLabel, dataInput, dataError);
+
+  const viewsInput = document.createElement("input");
+  viewsInput.type = "number";
+  viewsInput.id = `resultado-views-${roteiro.id}`;
+  viewsInput.min = "0";
+  viewsInput.step = "1";
+  viewsInput.placeholder = "Ex: 15000";
+  viewsInput.value = isEditingThis ? editingResultado.views : "";
+
+  const viewsError = document.createElement("span");
+  viewsError.className = "error";
+
+  const viewsField = document.createElement("div");
+  viewsField.className = "field";
+  const viewsLabel = document.createElement("label");
+  viewsLabel.textContent = "Views *";
+  viewsLabel.htmlFor = viewsInput.id;
+  viewsField.append(viewsLabel, viewsInput, viewsError);
+
+  const vendasInput = document.createElement("input");
+  vendasInput.type = "number";
+  vendasInput.id = `resultado-vendas-${roteiro.id}`;
+  vendasInput.min = "0";
+  vendasInput.step = "1";
+  vendasInput.placeholder = "Ex: 12";
+  vendasInput.value = isEditingThis ? editingResultado.vendas ?? "" : "";
+
+  const vendasField = document.createElement("div");
+  vendasField.className = "field";
+  const vendasLabel = document.createElement("label");
+  vendasLabel.textContent = "Vendas";
+  vendasLabel.htmlFor = vendasInput.id;
+  vendasField.append(vendasLabel, vendasInput);
+
+  const comissaoInput = document.createElement("input");
+  comissaoInput.type = "number";
+  comissaoInput.id = `resultado-comissao-${roteiro.id}`;
+  comissaoInput.min = "0";
+  comissaoInput.step = "0.01";
+  comissaoInput.placeholder = "Ex: 45.00";
+  comissaoInput.value = isEditingThis ? editingResultado.comissaoValor ?? "" : "";
+
+  const comissaoField = document.createElement("div");
+  comissaoField.className = "field";
+  const comissaoLabel = document.createElement("label");
+  comissaoLabel.textContent = "Comissão (R$)";
+  comissaoLabel.htmlFor = comissaoInput.id;
+  comissaoField.append(comissaoLabel, comissaoInput);
+
+  const ctrInput = document.createElement("input");
+  ctrInput.type = "number";
+  ctrInput.id = `resultado-ctr-${roteiro.id}`;
+  ctrInput.min = "0";
+  ctrInput.max = "100";
+  ctrInput.step = "0.01";
+  ctrInput.placeholder = "Ex: 3.2";
+  ctrInput.value = isEditingThis ? editingResultado.ctr ?? "" : "";
+
+  const ctrField = document.createElement("div");
+  ctrField.className = "field";
+  const ctrLabel = document.createElement("label");
+  ctrLabel.textContent = "CTR (%)";
+  ctrLabel.htmlFor = ctrInput.id;
+  ctrField.append(ctrLabel, ctrInput);
+
+  const obsArea = document.createElement("textarea");
+  obsArea.id = `resultado-obs-${roteiro.id}`;
+  obsArea.rows = 2;
+  obsArea.placeholder = "Notas livres sobre este resultado (opcional)";
+  obsArea.value = isEditingThis ? editingResultado.observacoes || "" : "";
+
+  const obsField = document.createElement("div");
+  obsField.className = "field field-full";
+  const obsLabel = document.createElement("label");
+  obsLabel.textContent = "Observações";
+  obsLabel.htmlFor = obsArea.id;
+  obsField.append(obsLabel, obsArea);
+
+  const actions = document.createElement("div");
+  actions.className = "form-actions";
+
+  const submitBtn = document.createElement("button");
+  submitBtn.type = "submit";
+  submitBtn.textContent = isEditingThis ? "Salvar alterações" : "Adicionar resultado";
+  actions.appendChild(submitBtn);
+
+  if (isEditingThis) {
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.className = "secondary";
+    cancelBtn.textContent = "Cancelar edição";
+    cancelBtn.addEventListener("click", () => {
+      editingResultadoId = null;
+      renderProdutos();
+    });
+    actions.appendChild(cancelBtn);
+  }
+
+  form.append(dataField, viewsField, vendasField, comissaoField, ctrField, obsField, actions);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    dataError.textContent = "";
+    viewsError.textContent = "";
+    dataInput.classList.remove("invalid");
+    viewsInput.classList.remove("invalid");
+
+    let valid = true;
+
+    if (!dataInput.value) {
+      dataError.textContent = "Data é obrigatória.";
+      dataInput.classList.add("invalid");
+      valid = false;
+    }
+
+    if (viewsInput.value === "") {
+      viewsError.textContent = "Views é obrigatório.";
+      viewsInput.classList.add("invalid");
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const dadosResultado = {
+      roteiroId: roteiro.id,
+      data: dataInput.value,
+      views: Number(viewsInput.value),
+      vendas: vendasInput.value === "" ? "" : Number(vendasInput.value),
+      comissaoValor: comissaoInput.value === "" ? "" : Number(comissaoInput.value),
+      ctr: ctrInput.value === "" ? "" : Number(ctrInput.value),
+      observacoes: obsArea.value.trim(),
+    };
+
+    if (isEditingThis) {
+      const index = resultados.findIndex((r) => r.id === editingResultado.id);
+      if (index !== -1) {
+        resultados[index] = { ...resultados[index], ...dadosResultado };
+      }
+      editingResultadoId = null;
+    } else {
+      resultados.push({
+        id: generateId(),
+        ...dadosResultado,
+        criadoEm: new Date().toISOString(),
+      });
+    }
+
+    saveResultados(resultados);
+    renderAll();
+  });
+
+  return form;
+}
+
+function renderResultadoCard(resultado) {
+  const card = document.createElement("div");
+  card.className = "resultado-card";
+
+  const header = document.createElement("div");
+  header.className = "resultado-header";
+
+  const dataEl = document.createElement("h5");
+  dataEl.textContent = formatarDataBR(resultado.data);
+  header.appendChild(dataEl);
+
+  const viewsBadge = document.createElement("span");
+  viewsBadge.className = "modo-badge";
+  viewsBadge.textContent = `${resultado.views} views`;
+  header.appendChild(viewsBadge);
+
+  card.appendChild(header);
+
+  const metaParts = [];
+  if (resultado.vendas !== "" && resultado.vendas !== undefined && resultado.vendas !== null) {
+    metaParts.push(`Vendas: ${resultado.vendas}`);
+  }
+  if (resultado.comissaoValor !== "" && resultado.comissaoValor !== undefined && resultado.comissaoValor !== null) {
+    metaParts.push(`Comissão: R$ ${Number(resultado.comissaoValor).toFixed(2)}`);
+  }
+  if (resultado.ctr !== "" && resultado.ctr !== undefined && resultado.ctr !== null) {
+    metaParts.push(`CTR: ${Number(resultado.ctr)}%`);
+  }
+  if (metaParts.length > 0) {
+    const metaEl = document.createElement("div");
+    metaEl.className = "meta";
+    metaEl.textContent = metaParts.join(" · ");
+    card.appendChild(metaEl);
+  }
+
+  if (resultado.observacoes) {
+    const obsEl = document.createElement("div");
+    obsEl.className = "obs";
+    obsEl.textContent = resultado.observacoes;
+    card.appendChild(obsEl);
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+
+  const editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.className = "btn-edit";
+  editBtn.textContent = "Editar";
+  editBtn.addEventListener("click", () => {
+    editingResultadoId = resultado.id;
+    expandedRoteiroIds.add(resultado.roteiroId);
+    const roteiroPai = roteiros.find((r) => r.id === resultado.roteiroId);
+    if (roteiroPai) expandedProductIds.add(roteiroPai.produtoId);
+    renderProdutos();
+    const formEl = document.querySelector(`.resultado-form[data-roteiro-id="${resultado.roteiroId}"]`);
+    if (formEl) formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  actions.appendChild(editBtn);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.type = "button";
+  deleteBtn.className = "btn-delete";
+  deleteBtn.textContent = "Excluir";
+  deleteBtn.addEventListener("click", () => deleteResultado(resultado.id));
+  actions.appendChild(deleteBtn);
+
+  card.appendChild(actions);
+
+  return card;
+}
+
+function deleteResultado(id) {
+  const resultado = resultados.find((r) => r.id === id);
+  if (!resultado) return;
+
+  const confirmado = window.confirm(`Excluir este resultado (${formatarDataBR(resultado.data)})? Esta ação não pode ser desfeita.`);
+  if (!confirmado) return;
+
+  resultados = resultados.filter((r) => r.id !== id);
+  saveResultados(resultados);
+
+  if (editingResultadoId === id) {
+    editingResultadoId = null;
+  }
+
+  renderAll();
+}
+
+function getLinhasComparativo() {
+  return resultados.map((resultado) => {
+    const roteiro = roteiros.find((r) => r.id === resultado.roteiroId);
+    const produto = roteiro ? produtos.find((p) => p.id === roteiro.produtoId) : null;
+
+    return {
+      resultadoId: resultado.id,
+      produtoNome: produto ? produto.nome : "—",
+      anguloOuHook: roteiro ? roteiro.anguloOuHook : "—",
+      modoOumomo: roteiro ? roteiro.modoOumomo : "—",
+      data: resultado.data,
+      views: Number(resultado.views) || 0,
+      vendas: resultado.vendas === "" || resultado.vendas === undefined || resultado.vendas === null ? null : Number(resultado.vendas),
+      comissaoValor: resultado.comissaoValor === "" || resultado.comissaoValor === undefined || resultado.comissaoValor === null ? null : Number(resultado.comissaoValor),
+      ctr: resultado.ctr === "" || resultado.ctr === undefined || resultado.ctr === null ? null : Number(resultado.ctr),
+    };
+  });
+}
+
+function compararLinhas(a, b, coluna, tipo) {
+  const valA = a[coluna];
+  const valB = b[coluna];
+
+  if (tipo === "numero") {
+    const numA = valA === null || valA === undefined ? 0 : valA;
+    const numB = valB === null || valB === undefined ? 0 : valB;
+    return numA - numB;
+  }
+
+  if (tipo === "data") {
+    return new Date(valA || 0) - new Date(valB || 0);
+  }
+
+  return String(valA || "").localeCompare(String(valB || ""), "pt-BR");
+}
+
+function formatarValorComparativo(linha, coluna) {
+  const valor = linha[coluna.key];
+
+  if (coluna.key === "data") return formatarDataBR(valor);
+
+  if (coluna.tipo === "numero") {
+    if (valor === null || valor === undefined) return "—";
+    if (coluna.key === "comissaoValor") return `R$ ${Number(valor).toFixed(2)}`;
+    if (coluna.key === "ctr") return `${Number(valor)}%`;
+    return String(valor);
+  }
+
+  return valor;
+}
+
+function renderComparativo() {
+  const total = resultados.length;
+  comparativoToggleBtn.textContent = `${comparativoExpanded ? "▾" : "▸"} Comparativo de resultados (${total})`;
+  comparativoContainer.hidden = !comparativoExpanded;
+  comparativoContainer.innerHTML = "";
+
+  if (!comparativoExpanded) return;
+
+  const linhas = getLinhasComparativo();
+
+  if (linhas.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Nenhum resultado registrado ainda.";
+    comparativoContainer.appendChild(empty);
+    return;
+  }
+
+  const colunaAtiva = COMPARATIVO_COLUNAS.find((c) => c.key === comparativoSort.coluna);
+  const linhasOrdenadas = linhas.slice().sort((a, b) => {
+    const resultadoComparacao = compararLinhas(a, b, colunaAtiva.key, colunaAtiva.tipo);
+    return comparativoSort.direcao === "asc" ? resultadoComparacao : -resultadoComparacao;
+  });
+
+  const table = document.createElement("table");
+  table.className = "comparativo-table";
+
+  const thead = document.createElement("thead");
+  const headRow = document.createElement("tr");
+
+  COMPARATIVO_COLUNAS.forEach((coluna) => {
+    const th = document.createElement("th");
+    const isActive = comparativoSort.coluna === coluna.key;
+    const arrow = isActive ? (comparativoSort.direcao === "asc" ? " ▲" : " ▼") : "";
+    th.textContent = coluna.label + arrow;
+    th.addEventListener("click", () => {
+      if (comparativoSort.coluna === coluna.key) {
+        comparativoSort = { coluna: coluna.key, direcao: comparativoSort.direcao === "asc" ? "desc" : "asc" };
+      } else {
+        comparativoSort = { coluna: coluna.key, direcao: "asc" };
+      }
+      renderComparativo();
+    });
+    headRow.appendChild(th);
+  });
+
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  linhasOrdenadas.forEach((linha) => {
+    const tr = document.createElement("tr");
+    COMPARATIVO_COLUNAS.forEach((coluna) => {
+      const td = document.createElement("td");
+      td.textContent = formatarValorComparativo(linha, coluna);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  comparativoContainer.appendChild(table);
 }
 
 function renderTextoBlock(label, texto) {
@@ -477,17 +954,28 @@ function deleteRoteiro(id) {
   const roteiro = roteiros.find((r) => r.id === id);
   if (!roteiro) return;
 
-  const confirmado = window.confirm(`Excluir o roteiro "${roteiro.anguloOuHook}"? Esta ação não pode ser desfeita.`);
+  const resultadosDoRoteiro = resultados.filter((r) => r.roteiroId === id);
+  const avisoResultados = resultadosDoRoteiro.length > 0
+    ? ` Isso também excluirá ${resultadosDoRoteiro.length} resultado(s) vinculado(s) a ele.`
+    : "";
+
+  const confirmado = window.confirm(`Excluir o roteiro "${roteiro.anguloOuHook}"?${avisoResultados} Esta ação não pode ser desfeita.`);
   if (!confirmado) return;
 
   roteiros = roteiros.filter((r) => r.id !== id);
+  resultados = resultados.filter((r) => r.roteiroId !== id);
   saveRoteiros(roteiros);
+  saveResultados(resultados);
 
   if (editingRoteiroId === id) {
     editingRoteiroId = null;
   }
+  expandedRoteiroIds.delete(id);
+  if (editingResultadoId && resultadosDoRoteiro.some((r) => r.id === editingResultadoId)) {
+    editingResultadoId = null;
+  }
 
-  renderProdutos();
+  renderAll();
 }
 
 function clearFieldErrors() {
@@ -550,8 +1038,14 @@ function deleteProduto(id) {
   if (!produto) return;
 
   const roteirosDoProduto = roteiros.filter((r) => r.produtoId === id);
-  const avisoRoteiros = roteirosDoProduto.length > 0
-    ? ` Isso também excluirá ${roteirosDoProduto.length} roteiro(s) vinculado(s) a ele.`
+  const roteiroIdsDoProduto = new Set(roteirosDoProduto.map((r) => r.id));
+  const resultadosDoProduto = resultados.filter((r) => roteiroIdsDoProduto.has(r.roteiroId));
+
+  const partesAviso = [];
+  if (roteirosDoProduto.length > 0) partesAviso.push(`${roteirosDoProduto.length} roteiro(s)`);
+  if (resultadosDoProduto.length > 0) partesAviso.push(`${resultadosDoProduto.length} resultado(s)`);
+  const avisoRoteiros = partesAviso.length > 0
+    ? ` Isso também excluirá ${partesAviso.join(" e ")} vinculado(s) a ele.`
     : "";
 
   const confirmado = window.confirm(`Excluir o produto "${produto.nome}"?${avisoRoteiros} Esta ação não pode ser desfeita.`);
@@ -559,13 +1053,19 @@ function deleteProduto(id) {
 
   produtos = produtos.filter((p) => p.id !== id);
   roteiros = roteiros.filter((r) => r.produtoId !== id);
+  resultados = resultados.filter((r) => !roteiroIdsDoProduto.has(r.roteiroId));
   saveProdutos(produtos);
   saveRoteiros(roteiros);
+  saveResultados(resultados);
   expandedProductIds.delete(id);
-  if (editingRoteiroId && roteirosDoProduto.some((r) => r.id === editingRoteiroId)) {
+  roteiroIdsDoProduto.forEach((roteiroId) => expandedRoteiroIds.delete(roteiroId));
+  if (editingRoteiroId && roteiroIdsDoProduto.has(editingRoteiroId)) {
     editingRoteiroId = null;
   }
-  renderProdutos();
+  if (editingResultadoId && resultadosDoProduto.some((r) => r.id === editingResultadoId)) {
+    editingResultadoId = null;
+  }
+  renderAll();
 
   if (productIdInput.value === id) {
     resetForm();
@@ -602,10 +1102,15 @@ form.addEventListener("submit", (event) => {
   }
 
   saveProdutos(produtos);
-  renderProdutos();
+  renderAll();
   resetForm();
 });
 
 cancelEditBtn.addEventListener("click", resetForm);
 
-renderProdutos();
+comparativoToggleBtn.addEventListener("click", () => {
+  comparativoExpanded = !comparativoExpanded;
+  renderComparativo();
+});
+
+renderAll();
